@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect, useRef, useCallback } from "react"
+import { debounce } from "lodash"
 
 function Editor() {
   // Create UUID for Editor or just a reference to the editor pane.
@@ -17,7 +18,7 @@ function Editor() {
 
     // Return now if we have no selection data to set
     if (!state.selection) return
-    console.log('Got Selection: ', state.selection)
+    console.log("Got Selection: ", state.selection)
 
     const editorPane = editorPaneRef.current || null
 
@@ -26,17 +27,17 @@ function Editor() {
       const selection = window.getSelection()
       selection.removeAllRanges()
 
-      // const startContainerNode = getNodeFromPath(
-      //   state.selection.startContainer,
-      //   editorPane
-      // )
-      // const endContainerNode = getNodeFromPath(
-      //   state.selection.endContainer,
-      //   editorPane
-      // )
+      const startContainerNode = getNodeFromPath(
+        state.selection.startContainer,
+        editorPane
+      )
+      const endContainerNode = getNodeFromPath(
+        state.selection.endContainer,
+        editorPane
+      )
 
-      const startContainerNode = state.selection.startContainer
-      const endContainerNode = state.selection.endContainer
+      // const startContainerNode = state.selection.startContainer
+      // const endContainerNode = state.selection.endContainer
 
       if (startContainerNode && endContainerNode) {
         try {
@@ -54,7 +55,7 @@ function Editor() {
           console.warn(state.selection)
           console.warn("Mutating State: Setting Selection Object to NULL")
           state.selection = null
-          setState((prevState) => ({...prevState, selection: null}))
+          setState((prevState) => ({ ...prevState, selection: null }))
           console.warn(state.selection)
         }
       } else {
@@ -62,23 +63,59 @@ function Editor() {
         console.warn("Current Seletion Data: ")
         console.warn(state.selection)
         console.warn("Mutating State: Setting Selection Object to NULL")
-        setState((prevState) => ({prevState, selection: null}))
+        setState((prevState) => ({ prevState, selection: null }))
         console.warn(state.selection)
       }
     }
   })
 
-  // Helper function to get a unique path to a DOM node within the editor
-  function getNodePath(node, root) {
-    if (!node || node === root) return []
-    const path = getNodePath(node.parentNode, root)
-    const index = Array.from(node.parentNode.childNodes).indexOf(node)
-    return [...path, index]
-  }
+  // // Helper function to get a unique path to a DOM node within the editor
+  // function getNodePath(node, root) {
+  //   if (!node || node === root) return []
+  //   const path = getNodePath(node.parentNode, root)
+  //   const index = Array.from(node.parentNode.childNodes).indexOf(node)
+  //   return [...path, index]
+  // }
 
-  // Helper function to get a DOM node from a path
-  function getNodeFromPath(path, root) {
+  // // Helper function to get a DOM node from a path
+  // function getNodeFromPath(path, root) {
+  //   let currentNode = root
+  //   for (const index of path) {
+  //     if (
+  //       currentNode &&
+  //       currentNode.childNodes &&
+  //       currentNode.childNodes[index]
+  //     ) {
+  //       currentNode = currentNode.childNodes[index]
+  //     } else {
+  //       return null
+  //     }
+  //   }
+  //   return currentNode
+  // }
+
+  const getNodePath = useCallback((node, root) => {
+    if (!node || node === root) {
+      return []
+    }
+    const parent = node.parentNode
+    if (!parent) {
+      return []
+    }
+
+    const index = Array.from(parent.childNodes).findIndex(
+      (child) => child === node
+    )
+
+    return [...getNodePath(parent, root), index]
+  }, [])
+
+  const getNodeFromPath = useCallback((path, root) => {
     let currentNode = root
+    if (!currentNode || !path) {
+      return null
+    }
+
     for (const index of path) {
       if (
         currentNode &&
@@ -87,11 +124,11 @@ function Editor() {
       ) {
         currentNode = currentNode.childNodes[index]
       } else {
-        return null
+        return null // Path is invalid
       }
     }
     return currentNode
-  }
+  }, [])
 
   function getNewSelectionGeometry(editorPane) {
     const selection = window.getSelection()
@@ -100,9 +137,9 @@ function Editor() {
       // Get the selection range object
       const range = selection.getRangeAt(0)
       // Get the start and end points of the current selection
-      const startNode = range.startContainer
+      const startNode = getNodePath(range.startContainer, editorPane)
       const startOffset = range.startOffset
-      const endNode = range.endContainer
+      const endNode = getNodePath(range.endContainer, editorPane)
       const endOffset = range.endOffset
       // Debug info.
       console.debug("Start Node:", startNode)
