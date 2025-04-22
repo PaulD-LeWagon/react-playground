@@ -7,6 +7,19 @@
   pointer-events: none;
 }
 
+header.App-header h2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+}
+header.App-header h2 .header-logo {
+  height: 10vmin;
+}
+header.App-header h2 .header-text {
+  height: auto;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
@@ -15,9 +28,9 @@
 
 .App-header {
   background-color: #282c34;
-  min-height: 100vh;
+  /* min-height: 100vh; */
   display: flex;
-  flex-direction: column;
+  /* flex-direction: column; */
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);

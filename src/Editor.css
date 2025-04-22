@@ -1,0 +1,48 @@
+div.basic-editor {
+  width: 500px;
+  border: solid black 2px;
+  border-radius: 5px;
+  margin: 1rem;
+  padding: 0.5rem;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+}
+div.basic-editor > h4 {
+  margin: 0;
+  padding: 0 0.25rem;
+  text-align: right;
+}
+
+div.basic-editor-controls,
+div.basic-editor-pane {
+  margin: 0.25rem;
+}
+
+div.basic-editor-controls {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0;
+}
+div.basic-editor-controls .show {
+  display: block;
+}
+div.basic-editor-controls .hide {
+  display: none;
+}
+div.basic-editor-controls button {
+  margin: 0.125rem 0.125rem 0;
+}
+
+.basic-editor-pane {
+  border: solid rgb(212, 212, 212) 1px;
+  border-radius: 2px;
+  text-align: left;
+  padding: 0.5rem 0.25rem;
+  min-height: 150px;
+  font-family: inherit;
+  /* box-shadow: inset 3px 3px 5px rgba(0, 0, 0, 0.1); */
+}
+
+.basic-editor-pane :not(:is(textarea:read-only)) {
+  background-color: yellow;
+}
