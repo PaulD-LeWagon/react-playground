@@ -1,9 +1,9 @@
 import logo from "./logo.svg"
 import "./App.css"
-import Editor from "./Editor"
-import "./Editor.css"
-import Calculator from "./Calculator"
-import "./Calculator.css"
+import Editor from "./editor/Editor"
+import "./editor/Editor.css"
+import Calculator from "./calculator/Calculator"
+import "./calculator/Calculator.css"
 
 function App() {
   return (

@@ -7,40 +7,38 @@ export default function Calculator() {
   const [calcStack, setCalcStack] = useState([])
   const [opsStack, setOpsStack] = useState([])
 
-  const doCalculation = (theOperator) => {
-    let cStack = [...calcStack]
+  const doCalculation = () => {
+    let cStack = [...calcStack, inputValue]
     let oStack = [...opsStack]
-    let total = cStack.shift()
+    let total = Number(cStack.shift())
 
     for (const i in cStack) {
-      const item = cStack[i]
+      switch (oStack[i]) {
+        case "*":
+          total *= Number(cStack[i])
+          break
+
+        case "/":
+          total /= Number(cStack[i])
+          break
+
+        case "+":
+          total += Number(cStack[i])
+          break
+
+        case "-":
+          total -= Number(cStack[i])
+          break
+
+        default:
+          throw Error(
+            `Calculation Error: [${total}, ${calcStack}, ${opsStack}]`
+          )
+      }
     }
-    switch (theOperator) {
-      case "*":
-        // setCalcStack([...calcStack, inputValue, theOperator])
-        break
-
-      // case "/":
-      //   console.log("Division", theOperator)
-      //   setCalcStack([...calcStack, inputValue, theOperator])
-      //   setInputValue("")
-      //   break
-
-      // case "+":
-      //   console.log("Addition", theOperator)
-      //   setCalcStack([...calcStack, inputValue, theOperator])
-      //   setInputValue("")
-      //   break
-
-      // case "-":
-      //   console.log("Subtraction", theOperator)
-      //   setCalcStack([...calcStack, inputValue, theOperator])
-      //   setInputValue("")
-      //   break
-
-      default:
-        throw Error(`Calculation Error: [${total}, ${calcStack}, ${opsStack}]`)
-    }
+    setCalcStack([])
+    setOpsStack([])
+    setInputValue((n) => Number(total.toFixed(2)))
   }
 
   const doOperationInput = (theOperator) => {
@@ -58,7 +56,7 @@ export default function Calculator() {
         break
 
       case "=":
-        if (calcStack.length >= 2) {
+        if (calcStack.length >= 1) {
           // Time to calculate
           doCalculation()
         } else {
@@ -67,9 +65,9 @@ export default function Calculator() {
             Unable to do calculation.
             Incorrect number of parameters
             [You need at least two numbers].
-            Do nothing!
+            Do nothing! [${calcStack}, ${opsStack}]
           `
-              .replace(/\n/, "")
+              .replace(/\n|\t/, "")
               .trim()
           )
         }
@@ -77,7 +75,11 @@ export default function Calculator() {
 
       default:
         // Just add it to the stack...
-        setOpsStack([...opsStack, theOperator])
+        setOpsStack((currentStack) => [...currentStack, theOperator])
+        // And the current value to calcStack
+        setCalcStack((currentStack) => [...currentStack, inputValue])
+        // Reset the inputValue
+        setInputValue("")
         break
     }
   }
@@ -85,24 +87,28 @@ export default function Calculator() {
   const addToValue = (thisValue) => {
     thisValue = String(thisValue)
     if (thisValue.length === 1) {
-      setInputValue(`${inputValue}${thisValue}`)
+      setInputValue((n) => `${inputValue}${thisValue}`)
     } else if (thisValue.length > 1) {
-      console.log("len > 1 : ", thisValue)
-      setInputValue(thisValue)
+      setInputValue((n) => thisValue)
     } else {
-      throw Error(
-        `Error: 'thisValue' must be at least 1 character in length and convert
-        to a number! [${thisValue}]`.trim()
+      throw new Error(
+        `
+        Error: 'thisValue' must be at least
+        1 character in length and convert
+        to a number! [${thisValue}]
+        `
+          .replace(/\n/, "")
+          .trim()
       )
     }
   }
 
   const processInputValue = (thisValue) => {
-    console.log(typeof thisValue, thisValue)
     switch (typeof thisValue) {
       case "number":
         addToValue(thisValue)
         break
+
       case "string":
         if (thisValue.length > 1) {
           thisValue = thisValue.replace(/[^0-9.]/, "")
@@ -119,8 +125,9 @@ export default function Calculator() {
           doOperationInput(thisValue)
         }
         break
+
       default:
-        throw Error(`Unknown input value: ${thisValue}`)
+        throw new Error(`Unknown input value: ${thisValue}`)
     }
   }
 
@@ -132,9 +139,15 @@ export default function Calculator() {
     processInputValue(event.target.value)
   }
 
+  console.count(`Calculator Render: `)
+  console.log(`iv: (${inputValue}), cs: [${calcStack}], os: [${opsStack}]`)
+
   return (
     <div className="calculator">
-      <h4 className="calc-title">Basic Calculator Version 1.0</h4>
+      <header className="calc-header">
+        <h4 className="calc-title">Basic Calculator</h4>
+        <h5 className="calc-sub-title">Version 1.0</h5>
+      </header>
       <input
         ref={inputRef}
         className="calc-input"

@@ -1,17 +1,39 @@
 div.calculator {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
   margin: 0.75rem;
   border: solid 1px gray;
   border-radius: 0.5rem;
   padding: 0.5rem;
+  box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.2);
+}
+div.calculator > header {
+  margin: none;
+  border: none;
+  padding: none;
+
+  width: 5.5rem;
 }
 div.calculator .calc-title {
   margin: 0 0 0.5rem 0;
   padding: 0;
-  font-size: smaller;
+  font-size: 0.65rem;
   text-align: right;
 }
-div.calculator input {
+div.calculator .calc-sub-title {
+  margin: 0 0 0.5rem 0;
+  padding: 0;
+  font-size: 0.5rem;
   text-align: right;
+  color: gray;
+}
+
+div.calculator > input {
+  text-align: right;
+  width: 5.5rem;
 }
 
 div.calc-keypad * {
@@ -28,5 +50,5 @@ div.calculator .calc-keypad-operations > button {
 }
 
 div.calculator .calc-keypad > .row.two > button {
-  width: 100%
+  width: 5.5rem;
 }

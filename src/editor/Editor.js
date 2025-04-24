@@ -6,7 +6,8 @@ function Editor() {
   // Create UUID for Editor or just a reference to the editor pane.
   const editorPaneRef = useRef()
   const [state, setState] = useState({
-    content: ` Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+    content: `
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit,
         sed do eiusmod tempor incididunt ut labore et dolore
         magnam aliquam quaerat voluptatem. Ut enim aeque doleamus
         animo, cum corpore dolemus, fieri tamen permagna accessio
