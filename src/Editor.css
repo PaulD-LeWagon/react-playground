@@ -1,8 +1,8 @@
 div.basic-editor {
   width: 500px;
-  border: solid black 2px;
-  border-radius: 5px;
-  margin: 1rem;
+  border: solid black 1px;
+  border-radius: 0.5rem;
+  margin: .75rem 0 .75rem .75rem;
   padding: 0.5rem;
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
 }
@@ -31,6 +31,7 @@ div.basic-editor-controls .hide {
 }
 div.basic-editor-controls button {
   margin: 0.125rem 0.125rem 0;
+  font-weight: bold;
 }
 
 .basic-editor-pane {
@@ -43,6 +44,6 @@ div.basic-editor-controls button {
   /* box-shadow: inset 3px 3px 5px rgba(0, 0, 0, 0.1); */
 }
 
-.basic-editor-pane :not(:is(textarea:read-only)) {
+.basic-editor-pane[contenteditable=true] {
   background-color: yellow;
 }

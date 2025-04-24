@@ -20,6 +20,15 @@ header.App-header h2 .header-text {
   height: auto;
 }
 
+.App .container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.App .container > div {
+  max-width: 50%;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;

@@ -2,7 +2,8 @@ import logo from "./logo.svg"
 import "./App.css"
 import Editor from "./Editor"
 import "./Editor.css"
-import TextEditor from "./TextEditor"
+import Calculator from "./Calculator"
+import "./Calculator.css"
 
 function App() {
   return (
@@ -18,8 +19,10 @@ function App() {
         </h2>
       </header>
 
-      <Editor />
-
+      <div className="container">
+        <Editor />
+        <Calculator />
+      </div>
     </div>
   )
 }

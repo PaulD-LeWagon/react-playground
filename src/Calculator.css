@@ -1,0 +1,32 @@
+div.calculator {
+  margin: 0.75rem;
+  border: solid 1px gray;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+}
+div.calculator .calc-title {
+  margin: 0 0 0.5rem 0;
+  padding: 0;
+  font-size: smaller;
+  text-align: right;
+}
+div.calculator input {
+  text-align: right;
+}
+
+div.calc-keypad * {
+  font-family: monospace;
+}
+div.calc-keypad > .row.one {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0.5rem;
+}
+div.calculator .calc-keypad-operations > button {
+  display: block;
+}
+
+div.calculator .calc-keypad > .row.two > button {
+  width: 100%
+}
