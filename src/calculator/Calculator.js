@@ -1,64 +1,24 @@
-import React, { useState, useRef } from "react"
-import _ from "lodash"
+import React, { useState } from "react"
 
 export default function Calculator() {
-  const opsRegex = /[*/+-]+$/
-  const comRegex = /[C=]+$/
+  // App state vars
   const [inputValue, setInputValue] = useState("0")
   const [calcStack, setCalcStack] = useState([])
   const [opsStack, setOpsStack] = useState([])
+  const [memory, setMemory] = useState("0")
 
-  //       if (calcStack.length >= 1) {
-  //         // Time to calculate
-  //         doCalculation()
-  //       } else {
-  //         throw new Error(
-  //           `
-  //           Unable to do calculation.
-  //           Incorrect number of parameters
-  //           [You need at least two numbers].
-  //           Do nothing! [${calcStack}, ${opsStack}]
-  //         `
-  //             .replace(/\n|\t/, "")
-  //             .trim()
-  //         )
-  //       }
-
-  const doCalculation = () => {
-    let cStack = [...calcStack, inputValue]
-    let oStack = [...opsStack]
-    let total = Number(cStack.shift())
-
-    for (const i in cStack) {
-      switch (oStack[i]) {
-        case "*":
-          total *= Number(cStack[i])
-          break
-
-        case "/":
-          total /= Number(cStack[i])
-          break
-
-        case "+":
-          total += Number(cStack[i])
-          break
-
-        case "-":
-          total -= Number(cStack[i])
-          break
-
-        default:
-          throw Error(
-            `Calculation Error: [${total}, ${calcStack}, ${opsStack}]`
-          )
-      }
-    }
-    setCalcStack([])
-    setOpsStack([])
-    setInputValue(Number(total.toFixed(2)))
+  const doOperation = (theOperator) => {
+    console.debug("Operator: ", theOperator)
+    // Just add it to the stack...
+    setOpsStack((curStack) => [...curStack, theOperator])
+    // And the current value to calcStack
+    setCalcStack((curStack) => [...curStack, inputValue])
+    // The reset the inputValue
+    setInputValue("")
   }
 
   const doCommand = (theCommand) => {
+    console.debug("Executing Command: ", theCommand)
     switch (theCommand) {
       case "C":
         // Reset the state
@@ -72,215 +32,382 @@ export default function Calculator() {
         doCalculation()
         break
 
+      case "M":
+        // Do memory recall - i.e. set inputValue to memory variable.
+        setInputValue(memory)
+        break
+
+      case "M-":
+        // Do memory delete - i.e. reset the memory variable.
+        setMemory("0")
+        break
+
+      case "M+":
+        // Do memory add - i.e. add the inputValue to memory
+        // variable (add to existing value if exists)
+        setMemory((m) => String(Number(m) + Number(inputValue)))
+        setInputValue("0")
+        break
+
       default:
         console.warn(`Command not implemented: (${theCommand})`)
         break
     }
   }
 
-  const doOperation = (theOperator) => {
-    // Just add it to the stack...
-    setOpsStack((currentStack) => [...currentStack, theOperator])
-    // And the current value to calcStack
-    setCalcStack((currentStack) => [...currentStack, inputValue])
-    // The reset the inputValue
-    setInputValue("")
-  }
+  const doCalculation = () => {
+    let cStack = [...calcStack, inputValue]
+    let oStack = [...opsStack]
+    let total = Number(cStack.shift())
 
-  const handleInputChange = (event, value) => {
-    value = value.trim()
-    const opsMatch = value.match(opsRegex)
-    if (opsMatch) {
-      console.log(`opsMatch: [${opsMatch}], v: ${value}, iv: ${inputValue}`)
-      doOperation(opsMatch.shift())
-    } else {
-      const comMatch = value.match(comRegex)
-      if (comMatch) {
-        console.log(`comMatch: [${comMatch}], v: ${value}, iv: ${inputValue}`)
-        doCommand(comMatch.shift())
-      } else {
-        setInputValue(value.replace(/[^0-9.]+/, ""))
+    for (const i in cStack) {
+      switch (oStack[i]) {
+        case "^":
+          total = total ** Number(cStack[i])
+          break
+
+        case "/":
+          total /= Number(cStack[i])
+          break
+
+        case "*":
+          total *= Number(cStack[i])
+          break
+
+        case "+":
+          total += Number(cStack[i])
+          break
+
+        case "-":
+          total -= Number(cStack[i])
+          break
+
+        default:
+          throw Error(
+            `Calculation Error: t: (${total}), cs: (${calcStack}), os: (${opsStack})`
+          )
       }
     }
+    setCalcStack([])
+    setOpsStack([])
+    setInputValue(Number(total.toFixed(2)))
   }
 
-  const handleNumberButtonClick = (event, value) => {
-    value = typeof value !== "string" ? String(value) : value
+  const handleOperatorButtonClick = (event, theValue) => {
+    console.debug("OpsClick: ", theValue)
+    doOperation(theValue)
+  }
 
+  const handleCommandButtonClick = (event, theValue) => {
+    console.debug("ComClick: ", theValue)
+    doCommand(theValue)
+  }
+
+  const handleNumberButtonClick = (event, theValue) => {
+    console.debug("NumClick: ", theValue)
+    theValue = typeof theValue !== "string" ? String(theValue) : theValue
     if (inputValue.length === 1 && inputValue === "0") {
-      if (value === ".") {
+      if (theValue === ".") {
         setInputValue("0.")
       } else {
-        setInputValue(value)
+        setInputValue(theValue)
       }
     } else {
-      setInputValue((n) => `${n}${value}`)
+      setInputValue((n) => `${n}${theValue}`)
     }
   }
 
-  const handleOperatorButtonClick = (event, value) => {
-    doOperation(value)
+  const handleInputChange = (event, theValue) => {
+    console.debug("InputChange: ", theValue)
+    const opsMatch = theValue.trim().match(/[*/+-]+$/)
+    if (opsMatch) {
+      doOperation(opsMatch.shift())
+    } else {
+      const comMatch = theValue.trim().match(/[C=]+$/)
+      if (comMatch) {
+        doCommand(comMatch.shift())
+      } else {
+        // Strip any illegal characters
+        setInputValue(theValue.replace(/[^0-9.]+/, ""))
+      }
+    }
   }
 
-  const handleCommandButtonClick = (event, value) => {
-    doCommand(value)
+  const inputEventHandlers = {
+    handleInput: (e) => {
+      handleInputChange(e, e.target.value)
+    },
+    handleKeyDown: (e) => {
+      if (e.key === "Enter") {
+        doCommand("=")
+      }
+    },
   }
 
-  console.count(`Calculator Render: `)
-  console.log(`iv: (${inputValue}), cs: [${calcStack}], os: [${opsStack}]`)
+  const btnType = "button"
+  const stdBtnClass = "calc-btn"
+  const calcButtons = [
+    {
+      btnType: btnType,
+      className: stdBtnClass,
+      children: "M",
+      clickHandler: (e) => {
+        handleCommandButtonClick(e, "M")
+      },
+    },
+    {
+      btnType: btnType,
+      className: stdBtnClass,
+      children: "M-",
+      clickHandler: (e) => {
+        handleCommandButtonClick(e, "M-")
+      },
+    },
+    {
+      btnType: btnType,
+      className: stdBtnClass,
+      children: "M+",
+      clickHandler: (e) => {
+        handleCommandButtonClick(e, "M+")
+      },
+    },
+    {
+      btnType: btnType,
+      className: stdBtnClass,
+      children: "C",
+      clickHandler: (e) => {
+        handleCommandButtonClick(e, "C")
+      },
+    },
+    {
+      btnType: btnType,
+      className: stdBtnClass,
+      children: "7",
+      clickHandler: (e) => {
+        handleNumberButtonClick(e, 7)
+      },
+    },
+    {
+      btnType: btnType,
+      className: stdBtnClass,
+      children: "8",
+      clickHandler: (e) => {
+        handleNumberButtonClick(e, 8)
+      },
+    },
+    {
+      btnType: btnType,
+      className: stdBtnClass,
+      children: "9",
+      clickHandler: (e) => {
+        handleNumberButtonClick(e, 9)
+      },
+    },
+    {
+      btnType: btnType,
+      className: stdBtnClass,
+      children: "/",
+      clickHandler: (e) => {
+        handleOperatorButtonClick(e, "/")
+      },
+    },
+    {
+      btnType: btnType,
+      className: stdBtnClass,
+      children: "4",
+      clickHandler: (e) => {
+        handleNumberButtonClick(e, 4)
+      },
+    },
+    {
+      btnType: btnType,
+      className: stdBtnClass,
+      children: "5",
+      clickHandler: (e) => {
+        handleNumberButtonClick(e, 5)
+      },
+    },
+    {
+      btnType: btnType,
+      className: stdBtnClass,
+      children: "6",
+      clickHandler: (e) => {
+        handleNumberButtonClick(e, 6)
+      },
+    },
+    {
+      btnType: btnType,
+      className: stdBtnClass,
+      children: "*",
+      clickHandler: (e) => {
+        handleOperatorButtonClick(e, "*")
+      },
+    },
+    {
+      btnType: btnType,
+      className: stdBtnClass,
+      children: "1",
+      clickHandler: (e) => {
+        handleNumberButtonClick(e, 1)
+      },
+    },
+    {
+      btnType: btnType,
+      className: stdBtnClass,
+      children: "2",
+      clickHandler: (e) => {
+        handleNumberButtonClick(e, 2)
+      },
+    },
+    {
+      btnType: btnType,
+      className: stdBtnClass,
+      children: "3",
+      clickHandler: (e) => {
+        handleNumberButtonClick(e, 3)
+      },
+    },
+    {
+      btnType: btnType,
+      className: stdBtnClass,
+      children: "-",
+      clickHandler: (e) => {
+        handleOperatorButtonClick(e, "-")
+      },
+    },
+    {
+      btnType: btnType,
+      className: stdBtnClass,
+      children: "0",
+      clickHandler: (e) => {
+        handleNumberButtonClick(e, 0)
+      },
+    },
+    {
+      btnType: btnType,
+      className: stdBtnClass,
+      children: ".",
+      clickHandler: (e) => {
+        handleNumberButtonClick(e, ".")
+      },
+    },
+    {
+      btnType: btnType,
+      className: stdBtnClass,
+      children: "^",
+      clickHandler: (e) => {
+        handleOperatorButtonClick(e, "^")
+      },
+    },
+    {
+      btnType: btnType,
+      className: stdBtnClass,
+      children: "+",
+      clickHandler: (e) => {
+        handleOperatorButtonClick(e, "+")
+      },
+    },
+    {
+      btnType: btnType,
+      className: `${stdBtnClass} fg-3`,
+      children: "=",
+      clickHandler: (e) => {
+        handleCommandButtonClick(e, "=")
+      },
+    },
+  ]
+
+  // const debugThis = (counterLabel, ...vars) => {
+  //   let output = ""
+  //   for (const i in vars) {
+  //     output += `\n${typeof vars[i]}: ${vars[i]}`
+  //   }
+  //   console.debug(
+  //     `
+  //       ${(() => {
+  //         console.count(counterLabel)
+  //         return ""
+  //       })()}
+
+  //       ${output}
+  //     `
+  //       // .replace(/\s+/g, " ")
+  //       .trim()
+  //   )
+  // }
+  // debugThis("Test Run", 1, "Two", { three: 3 })
+
+  console.debug(
+    `
+      ${(() => {
+        console.count("Calculator Render")
+        return ""
+      })()}
+      M: (${memory}),
+      IV: (${inputValue})
+      CS: [${calcStack}],
+      OS: [${opsStack}]
+    `
+      .replace(/\s+/g, " ")
+      .trim()
+  )
 
   return (
-    <div className="calculator">
-      <header className="calc-header">
+    <div className="calculator flex-box-cc flex-col flex-gap-2">
+      <header className="calc-header flex-box-ec flex-col">
         <h4 className="calc-title">Basic Calculator</h4>
         <h5 className="calc-sub-title">Version 1.0</h5>
       </header>
-      <input
+
+      <Input
+        inputType="text"
+        inputName="calc-input"
         className="calc-input"
-        type="text"
-        name="calc-input"
-        value={inputValue}
-        onInput={(e) => {
-          handleInputChange(e, e.target.value)
-        }}
+        inputValue={inputValue}
+        {...inputEventHandlers}
       />
-      <div className="calc-keypad">
-        <div className="row one">
-          <div className="calc-keypad-numbers col one">
-            <div className="numbers row one">
-              <button
-                type="button"
-                onClick={(e) => {
-                  handleNumberButtonClick(e, 7)
-                }}>
-                7
-              </button>
-              <button
-                type="button"
-                onClick={(e) => {
-                  handleNumberButtonClick(e, 8)
-                }}>
-                8
-              </button>
-              <button
-                type="button"
-                onClick={(e) => {
-                  handleNumberButtonClick(e, 9)
-                }}>
-                9
-              </button>
-            </div>
-            <div className="numbers row two">
-              <button
-                type="button"
-                onClick={(e) => {
-                  handleNumberButtonClick(e, 4)
-                }}>
-                4
-              </button>
-              <button
-                type="button"
-                onClick={(e) => {
-                  handleNumberButtonClick(e, 5)
-                }}>
-                5
-              </button>
-              <button
-                type="button"
-                onClick={(e) => {
-                  handleNumberButtonClick(e, 6)
-                }}>
-                6
-              </button>
-            </div>
-            <div className="numbers row three">
-              <button
-                type="button"
-                onClick={(e) => {
-                  handleNumberButtonClick(e, 1)
-                }}>
-                1
-              </button>
-              <button
-                type="button"
-                onClick={(e) => {
-                  handleNumberButtonClick(e, 2)
-                }}>
-                2
-              </button>
-              <button
-                type="button"
-                onClick={(e) => {
-                  handleNumberButtonClick(e, 3)
-                }}>
-                3
-              </button>
-            </div>
-            <div className="numbers row four">
-              <button
-                type="button"
-                onClick={(e) => {
-                  handleNumberButtonClick(e, 0)
-                }}>
-                0
-              </button>
-              <button
-                type="button"
-                onClick={(e) => {
-                  handleNumberButtonClick(e, ".")
-                }}>
-                .
-              </button>
-              <button
-                type="button"
-                onClick={(e) => {
-                  handleCommandButtonClick(e, "C")
-                }}>
-                C
-              </button>
-            </div>
-          </div>
-          <div className="calc-keypad-operations col two">
-            <button
-              type="button"
-              onClick={(e) => {
-                handleOperatorButtonClick(e, "/")
-              }}>
-              /
-            </button>
-            <button
-              type="button"
-              onClick={(e) => {
-                handleOperatorButtonClick(e, "*")
-              }}>
-              *
-            </button>
-            <button
-              type="button"
-              onClick={(e) => {
-                handleOperatorButtonClick(e, "+")
-              }}>
-              +
-            </button>
-            <button
-              type="button"
-              onClick={(e) => {
-                handleOperatorButtonClick(e, "-")
-              }}>
-              -
-            </button>
-          </div>
-        </div>
-        <div className="row two">
-          <button
-            type="button"
-            onClick={(e) => {
-              handleCommandButtonClick(e, "=")
-            }}>
-            =
-          </button>
-        </div>
+
+      <div className="calc-keypad flex-box-cc flx-w flex-gap-1">
+        {calcButtons.map((btnData, i) => {
+          return (
+            <Button
+              key={i}
+              {...btnData}
+            />
+          )
+        })}
       </div>
     </div>
+  )
+}
+
+export const Button = ({ btnType, className, clickHandler, children }) => {
+  return (
+    <button
+      className={className}
+      type={btnType ? btnType : "button"}
+      onClick={clickHandler}>
+      {children}
+    </button>
+  )
+}
+
+export const Input = ({
+  inputType,
+  inputName,
+  className,
+  inputValue,
+  handleInput,
+  handleKeyDown,
+}) => {
+  return (
+    <input
+      type={inputType}
+      name={inputName}
+      className={className}
+      value={inputValue}
+      onInput={handleInput}
+      onKeyDown={handleKeyDown}
+    />
   )
 }
