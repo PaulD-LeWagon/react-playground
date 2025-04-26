@@ -66,7 +66,7 @@ div.calculator .calc-sub-title {
   color: gray;
 }
 
-div.calculator > input {
+div.calculator > div.calc-display > input {
   text-align: right;
   width: 94%;
   box-shadow: inset 3px 3px 5px rgba(0, 0, 0, 0.2);

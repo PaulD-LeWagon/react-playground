@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react"
 import _ from "lodash"
 // import { debounce } from "lodash"
+import "./Editor.css"
 
 function Editor() {
   // Create UUID for Editor or just a reference to the editor pane.
