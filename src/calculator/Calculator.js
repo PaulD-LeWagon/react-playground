@@ -49,6 +49,11 @@ export default function Calculator() {
         setInputValue("0")
         break
 
+      case "%":
+        // Do percent - i.e. take the input value and convert it to a percentage
+        setInputValue((n) => (Number(n) === 0 ? "0" : Number(n) / 100))
+        break
+
       default:
         console.warn(`Command not implemented: (${theCommand})`)
         break
@@ -62,6 +67,10 @@ export default function Calculator() {
 
     for (const i in cStack) {
       switch (oStack[i]) {
+        case "RT":
+          total = total ** (1 / Number(cStack[i]))
+          break
+
         case "^":
           total = total ** Number(cStack[i])
           break
@@ -119,11 +128,11 @@ export default function Calculator() {
 
   const handleInputChange = (event, theValue) => {
     console.debug("InputChange: ", theValue)
-    const opsMatch = theValue.trim().match(/[*/+-]+$/)
+    const opsMatch = theValue.trim().match(/[*/+-^]|RT+$/)
     if (opsMatch) {
       doOperation(opsMatch.shift())
     } else {
-      const comMatch = theValue.trim().match(/[C=]+$/)
+      const comMatch = theValue.trim().match(/[C=%]|M\+|M-|M+$/)
       if (comMatch) {
         doCommand(comMatch.shift())
       } else {
@@ -150,6 +159,7 @@ export default function Calculator() {
     {
       btnType: btnType,
       className: stdBtnClass,
+      title: "Memory Recall",
       children: "M",
       clickHandler: (e) => {
         handleCommandButtonClick(e, "M")
@@ -158,6 +168,7 @@ export default function Calculator() {
     {
       btnType: btnType,
       className: stdBtnClass,
+      title: "Memory Delete",
       children: "M-",
       clickHandler: (e) => {
         handleCommandButtonClick(e, "M-")
@@ -166,6 +177,7 @@ export default function Calculator() {
     {
       btnType: btnType,
       className: stdBtnClass,
+      title: "Memory Add",
       children: "M+",
       clickHandler: (e) => {
         handleCommandButtonClick(e, "M+")
@@ -174,6 +186,7 @@ export default function Calculator() {
     {
       btnType: btnType,
       className: stdBtnClass,
+      title: "Cancel/Reset",
       children: "C",
       clickHandler: (e) => {
         handleCommandButtonClick(e, "C")
@@ -182,6 +195,43 @@ export default function Calculator() {
     {
       btnType: btnType,
       className: stdBtnClass,
+      title: "Undo",
+      children: "UD",
+      clickHandler: (e) => {
+        handleCommandButtonClick(e, "UD")
+      },
+    },
+    {
+      btnType: btnType,
+      className: stdBtnClass,
+      title: "Power",
+      children: "xⁿ",
+      clickHandler: (e) => {
+        handleOperatorButtonClick(e, "^")
+      },
+    },
+    {
+      btnType: btnType,
+      className: stdBtnClass,
+      title: "Root of x",
+      children: "√",
+      clickHandler: (e) => {
+        handleOperatorButtonClick(e, "RT")
+      },
+    },
+    {
+      btnType: btnType,
+      className: stdBtnClass,
+      title: "Last input to percent",
+      children: "％",
+      clickHandler: (e) => {
+        handleCommandButtonClick(e, "%")
+      },
+    },
+    {
+      btnType: btnType,
+      className: stdBtnClass,
+      title: "",
       children: "7",
       clickHandler: (e) => {
         handleNumberButtonClick(e, 7)
@@ -190,6 +240,7 @@ export default function Calculator() {
     {
       btnType: btnType,
       className: stdBtnClass,
+      title: "",
       children: "8",
       clickHandler: (e) => {
         handleNumberButtonClick(e, 8)
@@ -198,6 +249,7 @@ export default function Calculator() {
     {
       btnType: btnType,
       className: stdBtnClass,
+      title: "",
       children: "9",
       clickHandler: (e) => {
         handleNumberButtonClick(e, 9)
@@ -206,7 +258,8 @@ export default function Calculator() {
     {
       btnType: btnType,
       className: stdBtnClass,
-      children: "/",
+      title: "Divide",
+      children: "÷",
       clickHandler: (e) => {
         handleOperatorButtonClick(e, "/")
       },
@@ -214,6 +267,7 @@ export default function Calculator() {
     {
       btnType: btnType,
       className: stdBtnClass,
+      title: "",
       children: "4",
       clickHandler: (e) => {
         handleNumberButtonClick(e, 4)
@@ -222,6 +276,7 @@ export default function Calculator() {
     {
       btnType: btnType,
       className: stdBtnClass,
+      title: "",
       children: "5",
       clickHandler: (e) => {
         handleNumberButtonClick(e, 5)
@@ -230,6 +285,7 @@ export default function Calculator() {
     {
       btnType: btnType,
       className: stdBtnClass,
+      title: "",
       children: "6",
       clickHandler: (e) => {
         handleNumberButtonClick(e, 6)
@@ -238,7 +294,8 @@ export default function Calculator() {
     {
       btnType: btnType,
       className: stdBtnClass,
-      children: "*",
+      title: "Multiply",
+      children: "⨯",
       clickHandler: (e) => {
         handleOperatorButtonClick(e, "*")
       },
@@ -246,6 +303,7 @@ export default function Calculator() {
     {
       btnType: btnType,
       className: stdBtnClass,
+      title: "",
       children: "1",
       clickHandler: (e) => {
         handleNumberButtonClick(e, 1)
@@ -254,6 +312,7 @@ export default function Calculator() {
     {
       btnType: btnType,
       className: stdBtnClass,
+      title: "",
       children: "2",
       clickHandler: (e) => {
         handleNumberButtonClick(e, 2)
@@ -262,6 +321,7 @@ export default function Calculator() {
     {
       btnType: btnType,
       className: stdBtnClass,
+      title: "",
       children: "3",
       clickHandler: (e) => {
         handleNumberButtonClick(e, 3)
@@ -270,7 +330,8 @@ export default function Calculator() {
     {
       btnType: btnType,
       className: stdBtnClass,
-      children: "-",
+      title: "Subtract",
+      children: "−",
       clickHandler: (e) => {
         handleOperatorButtonClick(e, "-")
       },
@@ -278,6 +339,7 @@ export default function Calculator() {
     {
       btnType: btnType,
       className: stdBtnClass,
+      title: "",
       children: "0",
       clickHandler: (e) => {
         handleNumberButtonClick(e, 0)
@@ -286,33 +348,28 @@ export default function Calculator() {
     {
       btnType: btnType,
       className: stdBtnClass,
-      children: ".",
+      title: "",
+      children: "∙",
       clickHandler: (e) => {
         handleNumberButtonClick(e, ".")
       },
     },
     {
       btnType: btnType,
-      className: stdBtnClass,
-      children: "^",
-      clickHandler: (e) => {
-        handleOperatorButtonClick(e, "^")
-      },
-    },
-    {
-      btnType: btnType,
-      className: stdBtnClass,
-      children: "+",
-      clickHandler: (e) => {
-        handleOperatorButtonClick(e, "+")
-      },
-    },
-    {
-      btnType: btnType,
-      className: `${stdBtnClass} fg-3`,
+      className: `${stdBtnClass} fg-3-disabled`,
+      title: "Calculate",
       children: "=",
       clickHandler: (e) => {
         handleCommandButtonClick(e, "=")
+      },
+    },
+    {
+      btnType: btnType,
+      className: stdBtnClass,
+      title: "Add",
+      children: "+",
+      clickHandler: (e) => {
+        handleOperatorButtonClick(e, "+")
       },
     },
   ]
@@ -337,20 +394,30 @@ export default function Calculator() {
   // }
   // debugThis("Test Run", 1, "Two", { three: 3 })
 
-  console.debug(
-    `
-      ${(() => {
-        console.count("Calculator Render")
-        return ""
-      })()}
-      M: (${memory}),
-      IV: (${inputValue})
-      CS: [${calcStack}],
-      OS: [${opsStack}]
-    `
-      .replace(/\s+/g, " ")
-      .trim()
-  )
+  // const counter = () => {
+  //   console.count("Calculator Render")
+  //   return ""
+  // }
+  // console.debug(
+  //   `
+  //     ${counter()}
+  //     M: (${memory}),
+  //     IV: (${inputValue})
+  //     CS: [${calcStack}],
+  //     OS: [${opsStack}]
+  //   `
+  //     .replace(/\s+/g, " ")
+  //     .trim()
+  // )
+
+  // console.log(console)
+
+  console.log("To-do:")
+  console.log("1: Push this repo to github!")
+  console.log("2: Display contents of memory store.")
+  console.log("3: Display calculation sequence as-u-go.")
+  console.log("4: Implement the Undo/history feature.")
+  console.log("5: Start a Basic To-do list component.")
 
   return (
     <div className="calculator flex-box-cc flex-col flex-gap-2">
@@ -381,9 +448,16 @@ export default function Calculator() {
   )
 }
 
-export const Button = ({ btnType, className, clickHandler, children }) => {
+export const Button = ({
+  btnType,
+  className,
+  title,
+  clickHandler,
+  children,
+}) => {
   return (
     <button
+      title={title}
       className={className}
       type={btnType ? btnType : "button"}
       onClick={clickHandler}>
