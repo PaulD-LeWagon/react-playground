@@ -13,7 +13,14 @@ export default function Calculator() {
   const [history, setHistory] = useState([appState])
 
   const getCurrentCalculation = () => {
-    return "1 * 2 * 3"
+    const calcStack = appState.calcStack
+    const opsStack = appState.opsStack
+    const displayValue = appState.displayValue
+    let formula = ""
+    for (let i in calcStack) {
+      formula += `${calcStack[i]}${opsStack[i]}`
+    }
+    return `${formula}${displayValue}`
   }
 
   const doOperation = (theOperator) => {
@@ -105,7 +112,7 @@ export default function Calculator() {
         })
         break
 
-      case "%":
+      case "％":
         // Add current state to history variable
         setHistory((h) => [appState, ...h])
         // Do percent - i.e. take the input value and convert it to a percentage
@@ -133,19 +140,19 @@ export default function Calculator() {
 
     for (const i in cStack) {
       switch (oStack[i]) {
-        case "RT":
+        case "√":
           total = total ** (1 / Number(cStack[i]))
           break
 
-        case "^":
+        case "xⁿ":
           total = total ** Number(cStack[i])
           break
 
-        case "/":
+        case "÷":
           total /= Number(cStack[i])
           break
 
-        case "*":
+        case "⨯":
           total *= Number(cStack[i])
           break
 
@@ -153,7 +160,7 @@ export default function Calculator() {
           total += Number(cStack[i])
           break
 
-        case "-":
+        case "−":
           total -= Number(cStack[i])
           break
 
@@ -191,7 +198,7 @@ export default function Calculator() {
     setHistory((h) => [appState, ...h])
     theValue = typeof theValue !== "string" ? String(theValue) : theValue
     if (appState.displayValue.length === 1 && appState.displayValue === "0") {
-      if (theValue === ".") {
+      if (theValue === "∙") {
         setAppState((as) => {
           return {
             ...as,
@@ -239,9 +246,9 @@ export default function Calculator() {
     }
   }
 
-  const inputEventHandlers = {
+  const displayEventHandlers = {
     handleInput: (e) => {
-      handleInputChange(e, e.target.value)
+      handleInputChange(e, e.target.innerHTML)
     },
     handleKeyDown: (e) => {
       if (e.key === "Enter") {
@@ -304,7 +311,7 @@ export default function Calculator() {
       title: "Power",
       children: "xⁿ",
       clickHandler: (e) => {
-        handleOperatorButtonClick(e, "^")
+        handleOperatorButtonClick(e, "xⁿ")
       },
     },
     {
@@ -313,7 +320,7 @@ export default function Calculator() {
       title: "Root of x",
       children: "√",
       clickHandler: (e) => {
-        handleOperatorButtonClick(e, "RT")
+        handleOperatorButtonClick(e, "√")
       },
     },
     {
@@ -322,7 +329,7 @@ export default function Calculator() {
       title: "Last input to percent",
       children: "％",
       clickHandler: (e) => {
-        handleCommandButtonClick(e, "%")
+        handleCommandButtonClick(e, "％")
       },
     },
     {
@@ -358,7 +365,7 @@ export default function Calculator() {
       title: "Divide",
       children: "÷",
       clickHandler: (e) => {
-        handleOperatorButtonClick(e, "/")
+        handleOperatorButtonClick(e, "÷")
       },
     },
     {
@@ -394,7 +401,7 @@ export default function Calculator() {
       title: "Multiply",
       children: "⨯",
       clickHandler: (e) => {
-        handleOperatorButtonClick(e, "*")
+        handleOperatorButtonClick(e, "⨯")
       },
     },
     {
@@ -430,7 +437,7 @@ export default function Calculator() {
       title: "Subtract",
       children: "−",
       clickHandler: (e) => {
-        handleOperatorButtonClick(e, "-")
+        handleOperatorButtonClick(e, "−")
       },
     },
     {
@@ -448,7 +455,7 @@ export default function Calculator() {
       title: "",
       children: "∙",
       clickHandler: (e) => {
-        handleNumberButtonClick(e, ".")
+        handleNumberButtonClick(e, "∙")
       },
     },
     {
@@ -509,45 +516,31 @@ export default function Calculator() {
 
   // console.log(console)
 
-  // console.log("To-do:")
-  // console.log("1: [DONE] Push this repo to github! [DONE]")
-  // console.log("2: Display contents of appState.memory store.")
-  // console.log("3: Display calculation sequence as-u-go.")
-  // console.log("4: [DONE] Implement the Undo/history feature. [DONE]")
-  // console.log("5: Start a Basic To-do list component.")
+  console.log("To-do:")
+  console.log("1: [DONE] Push this repo to github! [DONE]")
+  console.log("2: [DONE] Display contents of appState.memory store. [DONE]")
+  console.log("3: [DONE] Display calculation sequence as-u-go. [DONE]")
+  console.log("4: Implement the Undo/history feature.")
+  console.log("5: Bug: When deleting 0 from display.")
+  console.log("6: Bug: Rounding errors ???.")
+  console.log("7: Start a Basic To-do list component.")
 
   return (
-    <div className="calculator flex-box-cc flex-col flex-gap-2">
-      <header className="calc-header flex-box-ec flex-col">
+    <div className="calculator">
+      <header className="calc-header">
         <h4 className="calc-title">Basic Calculator</h4>
         <h5 className="calc-sub-title">Version 1.0</h5>
       </header>
 
-      <div className="calc-display flex-box-cc flex-row flex-w flex-gap-1">
-        <Input
-          inputType="text"
-          inputName="calc-input"
-          className="calc-input fg-1"
-          displayValue={appState.displayValue}
-          {...inputEventHandlers}
-        />
-        <Input
-          inputType="text"
-          inputName="calc-memory-display"
-          className="calc-memory-display flex-b-2-fifths"
-          displayValue={appState.memory}
-          readOnly={true}
-        />
+      <Display
+        curDisplayValue={appState.displayValue}
+        curMemoryValue={appState.memory}
+        curCalculations={getCurrentCalculation()}
+        isEditable={true}
+        {...displayEventHandlers}
+      />
 
-        <Input
-          inputType="text"
-          inputName="calc-current-calculation"
-          className="calc-current-calculation flex-b-3-fifths"
-          displayValue={getCurrentCalculation()}
-        />
-      </div>
-
-      <div className="calc-keypad flex-box-cc flex-w flex-gap-1">
+      <div className="calc-keypad">
         {calcButtons.map((btnData, i) => {
           return (
             <Button
@@ -556,6 +549,51 @@ export default function Calculator() {
             />
           )
         })}
+      </div>
+    </div>
+  )
+}
+
+const Display = ({
+  curDisplayValue,
+  curMemoryValue,
+  curCalculations,
+  handleInput,
+  handleKeyDown,
+  isEditable = false,
+}) => {
+  const [show, setShow] = useState(false)
+  const handleCalculationClick = (e) => {
+    setShow(!show)
+    console.log("Implement history list...")
+  }
+  return (
+    <div className="calc-display-container">
+      <div
+        className="calc-primary display"
+        onInput={handleInput}
+        onKeyDown={handleKeyDown}
+        contentEditable={isEditable}
+        suppressContentEditableWarning={true}>
+        {curDisplayValue}
+      </div>
+      <div className="calc-sub-display-container">
+        <div className="calc-memory sub display">{curMemoryValue}</div>
+        <div className="calc-calculation-sub-display-wrapper">
+          <div
+            className="calc-calculation sub display"
+            onClick={handleCalculationClick}>
+            {curCalculations}
+          </div>
+          <div
+            className={show ? "calc-history-list" : "calc-history-list hide"}>
+            <ul>
+              <li>Version 1</li>
+              <li>Version 2</li>
+              <li>Version 3</li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   )
@@ -576,29 +614,5 @@ export const Button = ({
       onClick={clickHandler}>
       {children}
     </button>
-  )
-}
-
-export const Input = ({
-  inputType,
-  inputName,
-  styleObj,
-  className = null,
-  displayValue = null,
-  readOnly = null,
-  handleInput = null,
-  handleKeyDown = null,
-}) => {
-  return (
-    <input
-      type={inputType}
-      name={inputName}
-      className={className}
-      style={styleObj}
-      value={displayValue}
-      onInput={handleInput}
-      onKeyDown={handleKeyDown}
-      readOnly={readOnly}
-    />
   )
 }
