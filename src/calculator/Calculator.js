@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import './Calculator.css'
+import "./Calculator.css"
 
 export default function Calculator() {
   // App state vars
@@ -11,6 +11,10 @@ export default function Calculator() {
   }
   const [appState, setAppState] = useState(initState)
   const [history, setHistory] = useState([appState])
+
+  const getCurrentCalculation = () => {
+    return "1 * 2 * 3"
+  }
 
   const doOperation = (theOperator) => {
     console.debug("Operator: ", theOperator)
@@ -519,17 +523,31 @@ export default function Calculator() {
         <h5 className="calc-sub-title">Version 1.0</h5>
       </header>
 
-      <div className="calc-display flex-box-cc flex-col flex-gap-1">
+      <div className="calc-display flex-box-cc flex-row flex-w flex-gap-1">
         <Input
           inputType="text"
           inputName="calc-input"
-          className="calc-input "
+          className="calc-input fg-1"
           displayValue={appState.displayValue}
           {...inputEventHandlers}
         />
+        <Input
+          inputType="text"
+          inputName="calc-memory-display"
+          className="calc-memory-display flex-b-2-fifths"
+          displayValue={appState.memory}
+          readOnly={true}
+        />
+
+        <Input
+          inputType="text"
+          inputName="calc-current-calculation"
+          className="calc-current-calculation flex-b-3-fifths"
+          displayValue={getCurrentCalculation()}
+        />
       </div>
 
-      <div className="calc-keypad flex-box-cc flx-w flex-gap-1">
+      <div className="calc-keypad flex-box-cc flex-w flex-gap-1">
         {calcButtons.map((btnData, i) => {
           return (
             <Button
@@ -564,6 +582,7 @@ export const Button = ({
 export const Input = ({
   inputType,
   inputName,
+  styleObj,
   className = null,
   displayValue = null,
   readOnly = null,
@@ -575,6 +594,7 @@ export const Input = ({
       type={inputType}
       name={inputName}
       className={className}
+      style={styleObj}
       value={displayValue}
       onInput={handleInput}
       onKeyDown={handleKeyDown}
