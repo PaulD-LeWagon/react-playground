@@ -1,53 +1,43 @@
-.flex-box-cc {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.flex-box-ec {
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-}
-
-.flex-col {
-  flex-direction: column;
-}
-.flex-row {
-  flex-direction: row;
-}
-
-.flex-gap-1 {
-  gap: 0.2rem;
-}
-.flex-gap-2 {
-  gap: 0.5rem;
-}
-.flex-gap-2-1 {
-  row-gap: 0.5rem;
-  column-gap: 0.2rem;
-}
-
-.flx-w {
-  flex-wrap: wrap;
-}
-
-div.calculator .fg-1 {
-  flex-grow: 1;
-}
-div.calculator .fg-2 {
-  flex-grow: 2;
-}
-div.calculator .fg-3 {
-  flex-grow: 3;
-}
-
 div.calculator {
-  width: 9rem;
-  margin: 0.75rem;
-  padding: 1rem;
+  --calc-app-width: 9rem;
+  --calc-app-bg-color: #c0ffee;
 
-  border: solid 1px black;
-  border-radius: 0.5rem;
+  --calc-border-style: solid;
+  --calc-border-width: 0.15rem;
+  --calc-border-color: black;
+  --calc-border-rad: 0.5rem;
+  --calc-border: var(--calc-border-style) var(--calc-border-width)
+    var(--calc-border-color);
+
+  --calc-flex: flex;
+  --calc-jc-c: center;
+  --calc-jc-e: flex-end;
+  --calc-ai-c: center;
+  --calc-ai-e: flex-end;
+  --calc-fd-r: row;
+  --calc-fd-c: column;
+  --calc-fw: wrap;
+
+  --calc-g-1: 0.2rem;
+  --calc-g-2: calc(var(--calc-g-1) * 2);
+  --calc-g-3: calc(var(--calc-g-2) * 2);
+
+  /* The Calc App Styling starts here... */
+  display: var(--calc-flex);
+  justify-content: var(--calc-jc-c);
+  align-items: var(--calc-ai-c);
+  flex-direction: var(--calc-fd-c);
+  gap: var(--calc-g-3);
+
+  width: var(--calc-app-width);
+  background-color: var(--calc-app-bg-color);
+  border-style: var(--calc-border-style);
+  border-width: var(--calc-border-width);
+  border-color: var(--calc-border-color);
+  border-radius: var(--calc-border-rad);
+
+  margin: 0.75rem auto;
+  padding: 1rem;
   box-shadow: 8px 8px 10px rgba(0, 0, 0, 0.2);
 }
 
@@ -55,30 +45,16 @@ div.calculator * {
   margin: 0;
 }
 
-div.calculator > header {
-  width: 100%;
-}
-div.calculator .calc-title {
-  font-size: 0.65rem;
-}
-div.calculator .calc-sub-title {
-  font-size: 0.5rem;
-  color: gray;
-}
-
-div.calculator > div.calc-display > input {
+div.calculator input {
   text-align: right;
-  width: 94%;
-  box-shadow: inset 3px 3px 5px rgba(0, 0, 0, 0.2);
-}
-div.calculator > input,
-div.calculator div.calc-keypad * {
-  font-family: monospace;
+  /* Fix the widths so flex can resize them */
+  min-width: none;
+  width: 100%;
 }
 
 div.calculator button {
   font-weight: bold;
-  flex: 0 0 23%;
+  flex: 1 1 23%;
 }
 div.calculator button:hover {
   box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
@@ -87,3 +63,126 @@ div.calculator button:active {
   text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.3);
   box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.4);
 }
+
+div.calculator > header {
+  /* calc-header */
+  display: var(--calc-flex);
+  justify-content: var(--calc-jc-c);
+  align-items: var(--calc-ai-e);
+  flex-direction: var(--calc-fd-c);
+  gap: var(--calc-g-1);
+
+  width: 100%;
+}
+div.calculator > header .calc-title {
+  font-size: 0.65rem;
+}
+div.calculator > header .calc-sub-title {
+  font-size: 0.5rem;
+  color: gray;
+}
+
+div.calculator > div.calc-display-container *,
+div.calculator > div.calc-keypad * {
+  font-family: monospace;
+}
+
+/* START Calculator Display Styles ------------------------------------------ */
+div.calc-display-container {
+  /* border: dashed 2px red; */
+  width: 100%;
+  display: var(--calc-flex);
+  flex-direction: var(--calc-fd-c);
+  gap: var(--calc-g-2);
+}
+div.calc-display-container > .display {
+  flex: 1 1 100%;
+  font-size: large;
+}
+div.calc-display-container .display {
+  text-align: right;
+  display: inline-block;
+  padding: 0 0.2rem;
+  border: var(--calc-border);
+  border-radius: calc(var(--calc-border-rad) - 0.35rem);
+  text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: inset 3px 3px 5px rgba(0, 0, 0, 0.2);
+}
+.calc-sub-display-container {
+  display: var(--calc-flex);
+  justify-content: var(--calc-jc-c);
+  align-items: var(--calc-ai-c);
+  flex-direction: var(--calc-fd-r);
+  gap: var(--calc-g-2);
+  width: 100%;
+}
+div.calc-sub-display-container .sub.display {
+  opacity: 0.65;
+}
+div.calc-sub-display-container .calc-memory.sub.display {
+  flex: 0 0 20%;
+}
+div.calc-sub-display-container .calc-calculation-sub-display-wrapper {
+  flex: 0 1 80%;
+  display: flex;
+}
+div.calc-sub-display-container .calc-calculation.sub.display {
+  flex: 1 0 90%;
+  overflow: hidden;
+  display: inline-block;
+}
+/* .calc-sub-display-container .calc-memory {} */
+.calc-sub-display-container .calc-calculation-sub-display-wrapper {
+  position: relative;
+}
+.calc-sub-display-container .calc-calculation:hover {
+  cursor: pointer;
+}
+.calc-sub-display-container
+  .calc-calculation-sub-display-wrapper
+  .calc-history-list {
+  position: absolute;
+  top: 1.5rem;
+  right: 0px;
+  z-index: 1000;
+  background-color: var(--calc-app-bg-color);
+  border: solid 1px black;
+  border-radius: 0 0 .25rem .25rem;
+  min-width: 150%;
+  font-size: smaller;
+  text-align: right;
+}
+.calc-sub-display-container
+  .calc-calculation-sub-display-wrapper
+  .calc-history-list.hide {
+  display: none;
+}
+.calc-sub-display-container
+  .calc-calculation-sub-display-wrapper
+  .calc-history-list
+  ul {
+  list-style: none;
+  margin: 0;
+  padding: 0.2rem 0 0 0;
+  border: 0;
+}
+.calc-sub-display-container
+  .calc-calculation-sub-display-wrapper
+  .calc-history-list
+  ul
+  li {
+  padding: 0 0.3rem 0.2rem 0.3rem;
+}
+/* END Calculator Display Styles -------------------------------------------- */
+
+/* START Keypad Styles ------------------------------------------------------ */
+div.calculator div.calc-keypad {
+  /* calc-keypad flex-box-cc flex-w flex-gap-1 */
+  display: var(--calc-flex);
+  justify-content: var(--calc-jc-c);
+  align-items: var(--calc-ai-c);
+  flex-direction: var(--calc-fd-r);
+  flex-wrap: var(--calc-fw);
+  gap: var(--calc-g-1);
+}
+/* END Keypad Styles -------------------------------------------- */

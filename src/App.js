@@ -18,7 +18,7 @@ function App() {
       </header>
 
       <div className="container">
-        <Editor />
+        {/* <Editor /> */}
         <Calculator />
       </div>
     </div>
