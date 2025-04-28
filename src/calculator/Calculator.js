@@ -1,40 +1,94 @@
 import React, { useState } from "react"
+import { arrayChunk as chunk } from "../app-utilities"
 import "./Calculator.css"
+
+// const debugThis = (counterLabel, ...vars) => {
+//   let output = ""
+//   for (const i in vars) {
+//     output += `\n${typeof vars[i]}: ${vars[i]}`
+//   }
+//   console.debug(
+//     `
+//       ${(() => {
+//         console.count(counterLabel)
+//         return ""
+//       })()}
+
+//       ${output}
+//     `
+//       // .replace(/\s+/g, " ")
+//       .trim()
+//   )
+// }
+// debugThis("Test Run", 1, "Two", { three: 3 })
+
+// const counter = () => {
+//   console.count("Calculator Render")
+//   return ""
+// }
+// console.debug(
+//   `
+//     ${counter()}
+//     M: (${appState.memory}),
+//     IV: (${appState.displayValue})
+//     CS: [${appState.calcStack}]
+//   `
+//     .replace(/\s+/g, " ")
+//     .trim()
+// )
+
+// console.log(console)
+
+// const nativeLogger = console.log
+// console.log = (...params) => {
+//   for (let i in params) {
+//     nativeLogger(`${typeof params[i]}, ${params[i]}`)
+//   }
+// }
 
 export default function Calculator() {
   // App state vars
   const initState = {
     displayValue: "0",
     calcStack: [],
-    opsStack: [],
     memory: "0",
   }
   const [appState, setAppState] = useState(initState)
   const [history, setHistory] = useState([appState])
+  const [historyIndex, setHistoryIndex] = useState(0)
 
   const getCurrentCalculation = () => {
-    const calcStack = appState.calcStack
-    const opsStack = appState.opsStack
-    const displayValue = appState.displayValue
-    let formula = ""
-    for (let i in calcStack) {
-      formula += `${calcStack[i]}${opsStack[i]}`
+    return `${appState.calcStack.join("")}${appState.displayValue}`
+  }
+
+  const stepBackInTimeTo = (thisIndex) => {
+    if (thisIndex >= 0 ) {
+      setAppState((as) => history[thisIndex])
+      setHistory(history.slice(0, thisIndex))
+    } else {
+      let newHistory = null
+      setAppState((as) => history.slice(-1)[0])
+      newHistory = history.slice(0, -1)
+      setHistory(newHistory)
+      thisIndex = newHistory.length -1
     }
-    return `${formula}${displayValue}`
+    setHistoryIndex(thisIndex)
+  }
+
+  const addCurrentStateToHistory = () => {
+    setHistory((allOfHistory) => [...allOfHistory, appState])
   }
 
   const doOperation = (theOperator) => {
-    console.debug("Operator: ", theOperator)
+    console.debug(`Operator: ${theOperator}`)
     // Add current state to history variable
-    setHistory((h) => [appState, ...h])
+    addCurrentStateToHistory()
     // Now we can update the appState
     setAppState((as) => {
       return {
         ...as,
-        // Just add it to the stack...
-        opsStack: [...as.opsStack, theOperator],
-        // And the current value to the calcStack
-        calcStack: [...as.calcStack, as.displayValue],
+        // Just add it and the current value to the calcStack
+        calcStack: [...as.calcStack, as.displayValue, theOperator],
         // The reset the appState.displayValue
         displayValue: "",
       }
@@ -46,22 +100,18 @@ export default function Calculator() {
     switch (theCommand) {
       case "UD":
         // Do undo...
-        if (history.length) {
-          setAppState((as) => history[0])
-          setHistory((h) => h.slice(1))
-        }
+        stepBackInTimeTo()
         break
 
       case "C":
         // Add current state to history variable
-        setHistory((h) => [appState, ...h])
+        addCurrentStateToHistory()
         // Reset the appState values
         setAppState((as) => {
           return {
             // We don't reset the memory value
             ...as,
             // But we do reset everything else
-            opsStack: [],
             calcStack: [],
             displayValue: "0",
           }
@@ -75,7 +125,7 @@ export default function Calculator() {
 
       case "M":
         // Add current state to history variable
-        setHistory((h) => [appState, ...h])
+        addCurrentStateToHistory()
         // Do appState.memory recall - i.e. set appState.displayValue
         // to appState.memory variable.
         setAppState((as) => {
@@ -88,7 +138,7 @@ export default function Calculator() {
 
       case "M-":
         // Add current state to history variable
-        setHistory((h) => [appState, ...h])
+        addCurrentStateToHistory()
         // Do appState.memory delete - i.e. reset the appState.memory variable.
         setAppState((as) => {
           return {
@@ -100,7 +150,7 @@ export default function Calculator() {
 
       case "M+":
         // Add current state to history variable
-        setHistory((h) => [appState, ...h])
+        addCurrentStateToHistory()
         // Do appState.memory add - i.e. add the appState.displayValue to appState.memory
         // variable (add to existing value if exists)
         setAppState((as) => {
@@ -114,7 +164,7 @@ export default function Calculator() {
 
       case "％":
         // Add current state to history variable
-        setHistory((h) => [appState, ...h])
+        addCurrentStateToHistory()
         // Do percent - i.e. take the input value and convert it to a percentage
         setAppState((as) => {
           return {
@@ -135,47 +185,49 @@ export default function Calculator() {
 
   const doCalculation = () => {
     let cStack = [...appState.calcStack, appState.displayValue]
-    let oStack = [...appState.opsStack]
     let total = Number(cStack.shift())
+    cStack = chunk(cStack, 2)
 
     for (const i in cStack) {
-      switch (oStack[i]) {
+      switch (cStack[i][0]) {
         case "√":
-          total = total ** (1 / Number(cStack[i]))
+          total = total ** (1 / Number(cStack[i][1]))
           break
 
         case "xⁿ":
-          total = total ** Number(cStack[i])
+          total = total ** Number(cStack[i][1])
           break
 
         case "÷":
-          total /= Number(cStack[i])
+          total /= Number(cStack[i][1])
           break
 
         case "⨯":
-          total *= Number(cStack[i])
+          total *= Number(cStack[i][1])
           break
 
         case "+":
-          total += Number(cStack[i])
+          total += Number(cStack[i][1])
           break
 
         case "−":
-          total -= Number(cStack[i])
+          total -= Number(cStack[i][1])
           break
 
         default:
           throw Error(
-            `Calculation Error: t: (${total}), cs: (${appState.calcStack}), os: (${appState.opsStack})`
+            `Calculation Error: t: (${total}), cs: (${appState.calcStack.join(
+              " "
+            )})`
           )
       }
     }
+
     // Add current state to history variable
-    setHistory((h) => [appState, ...h])
+    addCurrentStateToHistory()
     setAppState((as) => {
       return {
         ...as,
-        opsStack: [],
         calcStack: [],
         displayValue: String(Number(total.toFixed(2))),
       }
@@ -195,7 +247,7 @@ export default function Calculator() {
   const handleNumberButtonClick = (event, theValue) => {
     console.debug("NumClick: ", theValue)
     // Add current state to history variable
-    setHistory((h) => [appState, ...h])
+    addCurrentStateToHistory()
     theValue = typeof theValue !== "string" ? String(theValue) : theValue
     if (appState.displayValue.length === 1 && appState.displayValue === "0") {
       if (theValue === "∙") {
@@ -234,7 +286,7 @@ export default function Calculator() {
         doCommand(comMatch.shift())
       } else {
         // Add current state to history variable
-        setHistory((h) => [appState, ...h])
+        addCurrentStateToHistory()
         // Strip any illegal characters and update app state
         setAppState((as) => {
           return {
@@ -478,52 +530,15 @@ export default function Calculator() {
     },
   ]
 
-  // const debugThis = (counterLabel, ...vars) => {
-  //   let output = ""
-  //   for (const i in vars) {
-  //     output += `\n${typeof vars[i]}: ${vars[i]}`
-  //   }
-  //   console.debug(
-  //     `
-  //       ${(() => {
-  //         console.count(counterLabel)
-  //         return ""
-  //       })()}
-
-  //       ${output}
-  //     `
-  //       // .replace(/\s+/g, " ")
-  //       .trim()
-  //   )
-  // }
-  // debugThis("Test Run", 1, "Two", { three: 3 })
-
-  // const counter = () => {
-  //   console.count("Calculator Render")
-  //   return ""
-  // }
-  // console.debug(
-  //   `
-  //     ${counter()}
-  //     M: (${appState.memory}),
-  //     IV: (${appState.displayValue})
-  //     CS: [${appState.calcStack}],
-  //     OS: [${appState.opsStack}]
-  //   `
-  //     .replace(/\s+/g, " ")
-  //     .trim()
-  // )
-
-  // console.log(console)
-
-  console.log("To-do:")
-  console.log("1: [DONE] Push this repo to github! [DONE]")
-  console.log("2: [DONE] Display contents of appState.memory store. [DONE]")
-  console.log("3: [DONE] Display calculation sequence as-u-go. [DONE]")
-  console.log("4: Implement the Undo/history feature.")
-  console.log("5: Bug: When deleting 0 from display.")
-  console.log("6: Bug: Rounding errors ???.")
-  console.log("7: Start a Basic To-do list component.")
+  // console.log("To-do:")
+  // console.log("1: [DONE] Push this repo to github! [DONE]")
+  // console.log("2: [DONE] Display contents of appState.memory store. [DONE]")
+  // console.log("3: [DONE] Display calculation sequence as-u-go. [DONE]")
+  // console.log("4: Implement the Undo/history feature.")
+  // console.log("5: Bug: When deleting 0 from display.")
+  // console.log("6: Bug: Rounding errors ???.")
+  // console.log("7: ADD: Config menu & minimise button. Dragable!?")
+  // console.log("8: Start a Basic To-do list component.")
 
   return (
     <div className="calculator">
@@ -536,6 +551,7 @@ export default function Calculator() {
         curDisplayValue={appState.displayValue}
         curMemoryValue={appState.memory}
         curCalculations={getCurrentCalculation()}
+        theHistory={history}
         isEditable={true}
         {...displayEventHandlers}
       />
@@ -560,6 +576,7 @@ const Display = ({
   curCalculations,
   handleInput,
   handleKeyDown,
+  theHistory,
   isEditable = false,
 }) => {
   const [show, setShow] = useState(false)
@@ -589,8 +606,9 @@ const Display = ({
             className={show ? "calc-history-list" : "calc-history-list hide"}>
             <ul>
               <li>Version 1</li>
-              <li>Version 2</li>
-              <li>Version 3</li>
+              {theHistory.map((ss, i)=>{
+                return <li key={i} onClick={(e)=>{console.log("li", i)}}>Snapshot: {i + 1} - {ss.calcStack.join('') + ss.displayValue}</li>
+              })}
             </ul>
           </div>
         </div>
