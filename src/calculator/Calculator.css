@@ -2,6 +2,9 @@
   --calc-app-width: 12rem;
   --calc-app-bg-color: #c0ffee;
   --calc-font-size: 1.5rem;
+  --calc-l-height: 1.2;
+  --calc-font-fam: Comfortaa, "Comfortaa Bold", "Droid Sans Regular";
+  --calc-font-fam-mono: "Adwaita Mono", monospace;
 
   --calc-border-style: solid;
   --calc-border-width: 0.15rem;
@@ -38,6 +41,8 @@ div.calculator {
   margin: 0.75rem auto;
   padding: 1rem;
   box-shadow: 8px 8px 10px rgba(0, 0, 0, 0.2);
+
+  font-family: var(--calc-font-fam);
   font-size: var(--calc-font-size);
 }
 div.calculator * {
@@ -77,7 +82,7 @@ div.calculator > .header .sub-title {
 }
 div.calculator > div.display-container *,
 div.calculator > div.keypad * {
-  font-family: monospace;
+  font-family: var(--calc-font-fam-mono);
 }
 
 
@@ -88,19 +93,22 @@ div.calculator > div.keypad * {
   flex-direction: var(--calc-fd-c);
   gap: var(--calc-g-2);
 }
-.display-container > .display {
-  overflow: hidden !important;
-}
+/* .display-container > .display {} */
 .display-container .display {
   text-align: right !important;
   display: block !important;
-  overflow: hidden !important;
+  overflow: scroll !important;
+  scrollbar-width: none !important;
 
   padding: 0 var(--calc-g-1);
   border: var(--calc-border);
   border-radius: calc(var(--calc-border-rad) - 0.35rem);
   text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
   box-shadow: inset 3px 3px 5px rgba(0, 0, 0, 0.2);
+}
+.display-container > .primary.display {
+  min-height: calc(var(--calc-font-size) + var(--calc-g-2));
+  max-height: calc(var(--calc-font-size) + var(--calc-g-2));
 }
 .sub-display-container {
   display: grid;
