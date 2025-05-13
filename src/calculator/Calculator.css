@@ -1,6 +1,7 @@
 :root {
   --calc-app-width: 12rem;
-  --calc-app-bg-color: #c0ffee;
+  --calc-app-bg-color: #44fecc;
+  --calc-cfg-panel-bg: #278d72;
   --calc-font-size: 1.5rem;
   --calc-l-height: 1.2;
   --calc-font-fam: Comfortaa, "Comfortaa Bold", "Droid Sans Regular";
@@ -26,12 +27,6 @@
 
 div.calculator {
   /* The Calc App Styling starts here... */
-  display: var(--calc-flex);
-  justify-content: var(--calc-jc-c);
-  align-items: var(--calc-ai-c);
-  flex-direction: var(--calc-fd-c);
-  gap: var(--calc-g-3);
-
   width: var(--calc-app-width);
   background-color: var(--calc-app-bg-color);
   border-style: var(--calc-border-style);
@@ -39,9 +34,8 @@ div.calculator {
   border-color: var(--calc-border-color);
   border-radius: var(--calc-border-rad);
   margin: 0.75rem auto;
-  padding: 1rem;
+  padding: 0;
   box-shadow: 8px 8px 10px rgba(0, 0, 0, 0.2);
-
   font-family: var(--calc-font-fam);
   font-size: var(--calc-font-size);
 }
@@ -49,7 +43,7 @@ div.calculator * {
   margin: 0;
 }
 div.calculator .hide {
-  display: none;
+  display: none !important;
 }
 div.calculator button {
   font-weight: bold;
@@ -63,7 +57,70 @@ div.calculator button:active {
   text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.3);
   box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.4);
 }
-div.calculator > .header {
+div.calculator div.config-panel button {
+  all: unset;
+  /* background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit; */
+}
+div.calculator div.config-panel button:focus,
+div.calculator div.config-panel button:hover {
+  cursor: pointer;
+  font-weight: bold;
+}
+
+div.calculator div.config-panel {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  font-size: calc(var(--calc-font-size) * (4 / 5));
+  color: #c0ffee;
+  border: none;
+  border-radius: calc(var(--calc-border-rad) - var(--calc-g-1));
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  background-color: var(--calc-cfg-panel-bg);
+  padding: var(--calc-g-2);
+}
+div.calculator div.config-panel.app-minimised {
+  border-radius: calc(var(--calc-border-rad) - var(--calc-g-1));
+}
+
+div.calculator div.config-panel .config-menu {
+  position: absolute;
+  top: calc(var(--calc-font-size) * (4 / 5) + (var(--calc-g-2) * 2));
+  left: 0px;
+  background-color: var(--calc-cfg-panel-bg);
+  box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.2);
+  padding: var(--calc-g-2);
+  border-bottom-left-radius: var(--calc-g-1);
+  border-bottom-right-radius: var(--calc-g-1);
+}
+div.calculator .rcc.range-component-container {
+  display: grid;
+  grid-template-columns: 1fr 5fr;
+  gap: var(--calc-g-1);
+  align-items: center;
+}
+div.calculator div.rcc.range-component-container .cell > * {
+  vertical-align: middle;
+  font-size: smaller;
+}
+
+div.calculator div.app-container {
+  display: var(--calc-flex);
+  justify-content: var(--calc-jc-c);
+  align-items: var(--calc-ai-c);
+  flex-direction: var(--calc-fd-c);
+  gap: var(--calc-g-3);
+
+  padding: 1rem;
+}
+div.calculator div.app-container > .header {
   /* calc-header */
   display: var(--calc-flex);
   justify-content: var(--calc-jc-c);
@@ -73,18 +130,17 @@ div.calculator > .header {
 
   width: 100%;
 }
-div.calculator > .header .title {
+div.calculator div.app-container > .header .title {
   font-size: calc(var(--calc-font-size) * (3.5 / 7));
 }
-div.calculator > .header .sub-title {
+div.calculator div.app-container > .header .sub-title {
   font-size: calc(var(--calc-font-size) * (2 / 5));
-  color: gray;
+  color: #278d72;
 }
-div.calculator > div.display-container *,
-div.calculator > div.keypad * {
+div.calculator div.app-container > div.display-container *,
+div.calculator div.app-container > div.keypad * {
   font-family: var(--calc-font-fam-mono);
 }
-
 
 /* START Calculator Display Styles ------------------------------------------ */
 .display-container {
@@ -103,6 +159,7 @@ div.calculator > div.keypad * {
   padding: 0 var(--calc-g-1);
   border: var(--calc-border);
   border-radius: calc(var(--calc-border-rad) - 0.35rem);
+  background-color: #c0ffee;
   text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
   box-shadow: inset 3px 3px 5px rgba(0, 0, 0, 0.2);
 }
@@ -144,13 +201,13 @@ div.sub-display-container .sub.display {
   border: solid 1px black;
   border-radius: 0 0 0.25rem 0.25rem;
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
-  min-width: 110%;
+  min-width: 100%;
   font-size: calc(var(--calc-font-size) * (4 / 9));
 }
 .sub-display-container .history-list ul {
   list-style: none;
   margin: 0;
-  padding: 0 0 .3rem 0;
+  padding: 0 0 0.3rem 0;
   border: 0;
   text-align: left;
 }
@@ -173,8 +230,10 @@ div.sub-display-container .sub.display {
 .sub-display-container .history-list ul li span:last-child {
   font-weight: bold;
 }
+.sub-display-container .history-list ul li span:first-child {
+  white-space: nowrap;
+}
 /* END Calculator Display Styles -------------------------------------------- */
-
 
 /* START Keypad Styles ------------------------------------------------------ */
 div.calculator div.keypad {
