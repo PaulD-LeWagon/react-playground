@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react"
 import AppState from "./AppState.class"
-import { arrayChunk as chunk } from "../app-utilities"
+import "../app-utilities"
 import "./Calculator.css"
 
 // const debugThis = (counterLabel, ...vars) => {
@@ -58,15 +58,42 @@ import "./Calculator.css"
 //   console.log(x)
 // })("Hello Closure World!")
 
+// const uber = ["one", 1, "two", 2, "three", 3, "4", "four"]
+// const chunked = uber.chunk(2)
+// const eachCons = uber.each_cons(2)
+
+// console.log("eachCons(2): ", eachCons)
+
+// console.log("first", chunked.first().first())
+// console.log("last", chunked.last().last())
+
+// console.log("first uber:", uber.first())
+// console.log("second uber:", uber.second())
+// console.log("third uber:", uber.third())
+// console.log("fourth uber:", uber.fourth())
+// console.log("fifth uber:", uber.fifth())
+// console.log("last uber:", uber.last())
+
 export default function Calculator({ domID = "my-calculator" }) {
   // App state vars
   const [appState, setAppState] = useState(new AppState())
   const [history, setHistory] = useState([])
-  const [precision, setPrecision] = useState(3)
+  const [precision, setPrecision] = useState(2)
+  const [showCfgMenu, setShowCfgMenu] = useState(false)
+  const [isMinimised, setIsMinimised] = useState(false)
+  const configMenuRef = useRef(null)
   const primaryRef = useRef(null)
   const memoryRef = useRef(null)
   const calculationRef = useRef(null)
   const displayRefs = [primaryRef, memoryRef, calculationRef]
+  const thePrecisionRange = {
+    min: 0,
+    max: 10,
+    value: precision,
+    onChange: (event) => {
+      setPrecision(event.target.value)
+    },
+  }
 
   useEffect(() => {
     // The displays to the immediately input value
@@ -79,6 +106,14 @@ export default function Calculator({ domID = "my-calculator" }) {
         })
       }
     })
+
+    const globalClick = (event) => {
+      if (!configMenuRef.current.contains(event.target)) {
+        setShowCfgMenu(false)
+      }
+    }
+    document.addEventListener("mousedown", globalClick)
+    return () => document.removeEventListener("mousedown", globalClick)
   })
 
   const stepBackInTimeTo = (thisIndex) => {
@@ -190,36 +225,33 @@ export default function Calculator({ domID = "my-calculator" }) {
   const doCalculation = () => {
     let cStack = [...appState.calcStack, appState.displayValue]
     let total = Number(cStack.shift())
-    cStack = chunk(cStack, 2)
-
-    for (const i in cStack) {
-      switch (cStack[i][0]) {
+    let theOperator = null
+    cStack = cStack.chunk(2)
+    for (const eachPair of cStack) {
+      theOperator = eachPair.first()
+      switch (theOperator) {
         case "√":
-          total = total ** (1 / Number(cStack[i][1]))
+          total = total ** (1 / Number(eachPair.last()))
           break
-
         case "xⁿ":
-          total = total ** Number(cStack[i][1])
+          total = total ** Number(eachPair.last())
           break
-
         case "÷":
-          total /= Number(cStack[i][1])
+          total /= Number(eachPair.last())
           break
-
         case "⨯":
-          total *= Number(cStack[i][1])
+          total *= Number(eachPair.last())
           break
-
         case "+":
-          total += Number(cStack[i][1])
+          total += Number(eachPair.last())
           break
-
         case "−":
-          total -= Number(cStack[i][1])
+          total -= Number(eachPair.last())
           break
-
         default:
-          throw Error(`Calculation Error: t: (${total}), state: (${appState})`)
+          throw Error(
+            `Operator Error: op: (${theOperator}) t: (${total}), state: (${appState}) in doCalculation.`
+          )
       }
     }
     // Add current state to history variable
@@ -281,14 +313,6 @@ export default function Calculator({ domID = "my-calculator" }) {
   }
 
   const displayEventHandlers = {
-    // handleInput: (e) => {
-    //   handleInputChange(e, e.target.innerHTML)
-    // },
-    // handleKeyDown: (e) => {
-    //   if (e.key === "Enter") {
-    //     doCommand("=")
-    //   }
-    // },
     handleDblClick: handleDblClick,
     handleLiClick: (e, theIndex) => {
       stepBackInTimeTo(theIndex)
@@ -516,76 +540,79 @@ export default function Calculator({ domID = "my-calculator" }) {
     },
   ]
 
-  const configButtons = [
-    {
-      btnType: btnType,
-      className: stdBtnClass,
-      title: "Close",
-      children: "X",
-      clickHandler: (e) => {
-        handleCommandButtonClick(e, "XX")
-      },
-    },
-    {
-      btnType: btnType,
-      className: stdBtnClass,
-      title: "Set precision e.g. 2 d.p. [0.00]",
-      children: "D",
-      clickHandler: (e) => {
-        handleCommandButtonClick(e, "DP")
-      },
-    },
-  ]
+  console.log("To-do:")
+  console.log("1: [DONE] Push this repo to github! [DONE]")
+  console.log("2: [DONE] Display contents of appState.memory store. [DONE]")
+  console.log("3: [DONE] Display calculation sequence as-u-go. [DONE]")
+  console.log("4: [DONE] Implement the Undo/history feature. X2 [DONE] ")
+  console.log("5: [DONE] Bug: When deleting 0 from display. Removed keyboard Input")
+  console.log("5: [DONE] Cont: functionality The unicode characters are not on a standard keyboard.")
+  console.log("6: [DONE]Bug: Rounding errors ??? Add a config option. [DONE]")
+  console.log("7: [DONE]ADD: Config menu & minimise button. Dragable!? [DONE]")
 
-  // console.log("To-do:")
-  // console.log("1: [DONE] Push this repo to github! [DONE]")
-  // console.log("2: [DONE] Display contents of appState.memory store. [DONE]")
-  // console.log("3: [DONE] Display calculation sequence as-u-go. [DONE]")
-  // console.log("4: [DONE] Implement the Undo/history feature. X2 [DONE] ")
-  // console.log("5: [DONE] Bug: When deleting 0 from display. Removed keyboard Input")
-  // console.log("5: [DONE] Cont: functionality The unicode characters are not on a standard keyboard.")
-  // console.log("6: Bug: Rounding errors ??? Add a config option.")
-  // console.log("7: ADD: Config menu & minimise button. Dragable!?")
-  // console.log("8: Start a Basic To-do list component.")
+  console.log("8: Start a Basic To-do list component.")
+  console.log("9: Create ur own custom collection objects and rubify them.")
+  console.log("10: Make sure you can pass a Block|callback to them.")
 
   return (
     <div
       id={domID}
       className="calculator">
-      <div className="config-panel hide">
-        {configButtons.map((btnData, i) => {
-          return (
-            <Button
-              key={i}
-              {...btnData}
-            />
-          )
-        })}
+      <div
+        ref={configMenuRef}
+        className={isMinimised ? "config-panel app-minimised" : "config-panel"}>
+        <div className="menu-gear">
+          <button
+            className="calc-config-toggle"
+            onClick={(e) => {
+              setShowCfgMenu(!showCfgMenu)
+            }}>
+            ⚙
+          </button>
+          <div
+            className={showCfgMenu ? "config-menu show" : "config-menu hide"}>
+            <Range {...thePrecisionRange} />
+          </div>
+        </div>
+
+        <div className="menu-the-rest">
+          <button
+            className="calc-config-toggle"
+            onClick={(e) => {
+              setIsMinimised(!isMinimised)
+            }}>
+            {isMinimised ? "□" : "▣"}
+            {/* "◾ ◼ ▢ □ _" */}
+          </button>
+        </div>
       </div>
 
-      <header className="header">
-        <h4 className="title">Basic Calculator</h4>
-        <h5 className="sub-title">Version 1.0</h5>
-      </header>
+      <div
+        className={isMinimised ? "app-container hide" : "app-container show"}>
+        <header className="header">
+          <h4 className="title">Basic Calculator</h4>
+          <h5 className="sub-title">Version 1.0</h5>
+        </header>
 
-      <Display
-        refs={displayRefs}
-        curDisplayValue={appState.displayValue}
-        curMemoryValue={appState.memory}
-        curCalculations={appState.getCalculation()}
-        theHistory={history}
-        eventHandlers={displayEventHandlers}
-      />
+        <Display
+          refs={displayRefs}
+          curDisplayValue={appState.displayValue}
+          curMemoryValue={appState.memory}
+          curCalculations={appState.getCalculation()}
+          theHistory={history}
+          eventHandlers={displayEventHandlers}
+        />
 
-      <div className="keypad">
-        {calcButtons.map((btnData, i) => {
-          return (
-            <Button
-              key={i}
-              {...btnData}
-            />
-          )
-        })}
+        <div className="keypad">
+          {calcButtons.map((btnData, i) => {
+            return (
+              <Button
+                key={i}
+                {...btnData}
+              />
+            )
+          })}
+        </div>
       </div>
     </div>
   )
@@ -660,7 +687,7 @@ const Display = ({
                     onClick={(e) => {
                       handleCalcLiClick(e, i)
                     }}>
-                    <span>Snapshot: {i + 1}</span>
+                    <span>Snapshot {i + 1}: </span>
                     <span>{ss.calcStack.join("") + ss.displayValue}</span>
                   </li>
                 )
@@ -688,5 +715,27 @@ export const Button = ({
       onClick={clickHandler}>
       {children}
     </button>
+  )
+}
+
+export const Range = ({ min, max, step, value, onChange }) => {
+  return (
+    <div className="rcc range-component-container grid">
+      <div className="cell">
+        <div className="rcd range-component-display">{value}</div>
+      </div>
+
+      <div className="cell">
+        <input
+          className="rci range-component-input"
+          type="range"
+          min={min || 0}
+          max={max || 10}
+          step={step || 1}
+          value={value}
+          onChange={onChange}
+        />
+      </div>
+    </div>
   )
 }

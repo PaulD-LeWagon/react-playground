@@ -13,12 +13,12 @@ function App() {
             className="header-logo"
             alt="logo"
           />{" "}
-          <span className="header-text">My Basic Editor</span>
+          <span className="header-text">My React Playground</span>
         </h2>
       </header>
 
       <div className="container">
-        {/* <Editor /> */}
+        <Editor />
         <Calculator />
       </div>
     </div>
