@@ -2,6 +2,8 @@ import logo from "./logo.svg"
 import "./App.css"
 import Editor from "./editor/Editor"
 import Calculator from "./calculator/Calculator"
+import TodoList from "./todo/TodoList"
+import { default as tasks } from "./todo/tasks"
 
 function App() {
   return (
@@ -18,6 +20,10 @@ function App() {
       </header>
 
       <div className="container">
+        <TodoList
+          name="Latin"
+          currentTasks={tasks}
+        />
         <Editor />
         <Calculator />
       </div>
