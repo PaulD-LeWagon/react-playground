@@ -1,0 +1,31 @@
+div.todo {
+  display: block;
+
+  min-width: 13rem;
+  /* max-width: 20rem; */
+
+  margin: 0.5rem auto;
+  border: solid 0.25rem black;
+  border-radius: 3rem;
+  padding: 0.5rem;
+}
+div.todo * {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+div.todo > .todo-container {
+  display: grid;
+  grid-template-columns: 1fr 4fr 3fr;
+  /* align-items: center; */
+}
+div.todo > .todo-container > .todo-title {
+  text-align: left;
+}
+div.todo > .todo-container .todo-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.25rem;
+  /* align-items: center; */
+}

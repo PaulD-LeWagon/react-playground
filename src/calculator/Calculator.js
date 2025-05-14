@@ -78,13 +78,15 @@ export default function Calculator({ domID = "my-calculator" }) {
   // App state vars
   const [appState, setAppState] = useState(new AppState())
   const [history, setHistory] = useState([])
-  const [precision, setPrecision] = useState(2)
+  const [precision, setPrecision] = useState(2) // Should this be moved to the AppState class???
   const [showCfgMenu, setShowCfgMenu] = useState(false)
   const [isMinimised, setIsMinimised] = useState(false)
+  // Element/Component References
   const configMenuRef = useRef(null)
   const primaryRef = useRef(null)
   const memoryRef = useRef(null)
   const calculationRef = useRef(null)
+
   const displayRefs = [primaryRef, memoryRef, calculationRef]
   const thePrecisionRange = {
     min: 0,

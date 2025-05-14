@@ -1,0 +1,32 @@
+div.task-list-component {
+  max-width: 75%;
+  margin: 0 auto;
+}
+
+div.task-list-component h2.title {
+  text-align: left;
+  margin: 1.5rem 0 1rem 0;
+  font-size: xx-large;
+}
+
+div.task-list-component .task-list-add-container {
+  text-align: right;
+  border-bottom: solid 0.25rem black;
+}
+div.task-list-component .task-list-add-container * {
+  margin: 0.25rem 0.25rem 0.5rem 0;
+  border: solid 0.25rem black;
+  border-radius: 0.25rem;
+  font-size: larger;
+  line-height: 1.5;
+}
+div.task-list-component .task-list-add-container button:hover {
+  cursor: pointer;
+}
+
+div.task-list-component ul.task-list-ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
