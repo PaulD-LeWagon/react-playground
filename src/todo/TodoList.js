@@ -1,4 +1,4 @@
-import React, { useState, useReducer, useEffect, useRef } from "react"
+import React, { useReducer, useRef } from "react"
 import "./TodoList.css"
 import "../app-utilities"
 import Todo from "./Todo"
@@ -20,6 +20,7 @@ function TodoList({ name, currentTasks }) {
         done: false,
       },
     })
+    addTodoInputRef.current.value = ""
   }
 
   return (
@@ -32,7 +33,7 @@ function TodoList({ name, currentTasks }) {
           type="text"
           placeholder="Add a todo?"
         />
-        <button onClick={handleAddTodoClick}>Add</button>
+        <button className="button is-primary" onClick={handleAddTodoClick}>Add</button>
       </div>
 
       <ul className="task-list-ul">

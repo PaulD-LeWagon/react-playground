@@ -1,8 +1,8 @@
 :root {
-  --calc-app-width: 12rem;
+  --calc-app-width: 20rem;
   --calc-app-bg-color: #44fecc;
   --calc-cfg-panel-bg: #278d72;
-  --calc-font-size: 1.5rem;
+  --calc-font-size: 1.8rem;
   --calc-l-height: 1.2;
   --calc-font-fam: Comfortaa, "Comfortaa Bold", "Droid Sans Regular";
   --calc-font-fam-mono: "Adwaita Mono", monospace;
@@ -57,16 +57,7 @@ div.calculator button:active {
   text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.3);
   box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.4);
 }
-div.calculator div.config-panel button {
-  all: unset;
-  /* background: none;
-  color: inherit;
-  border: none;
-  padding: 0;
-  font: inherit;
-  cursor: pointer;
-  outline: inherit; */
-}
+/* div.calculator div.config-panel button {} */
 div.calculator div.config-panel button:focus,
 div.calculator div.config-panel button:hover {
   cursor: pointer;
@@ -89,7 +80,6 @@ div.calculator div.config-panel {
 div.calculator div.config-panel.app-minimised {
   border-radius: calc(var(--calc-border-rad) - var(--calc-g-1));
 }
-
 div.calculator div.config-panel .config-menu {
   position: absolute;
   top: calc(var(--calc-font-size) * (4 / 5) + (var(--calc-g-2) * 2));
@@ -129,8 +119,11 @@ div.calculator div.app-container > .header {
   gap: var(--calc-g-1);
 
   width: 100%;
+  font-weight: bold !important;
 }
 div.calculator div.app-container > .header .title {
+  margin: 0;
+  color: #278d72;
   font-size: calc(var(--calc-font-size) * (3.5 / 7));
 }
 div.calculator div.app-container > .header .sub-title {
@@ -156,7 +149,9 @@ div.calculator div.app-container > div.keypad * {
   overflow: scroll !important;
   scrollbar-width: none !important;
 
-  padding: 0 var(--calc-g-1);
+  color: black;
+  line-height: normal;
+  /* padding: calc(var(--calc-g-1) / 2) var(--calc-g-1); */
   border: var(--calc-border);
   border-radius: calc(var(--calc-border-rad) - 0.35rem);
   background-color: #c0ffee;
@@ -164,20 +159,29 @@ div.calculator div.app-container > div.keypad * {
   box-shadow: inset 3px 3px 5px rgba(0, 0, 0, 0.2);
 }
 .display-container > .primary.display {
-  min-height: calc(var(--calc-font-size) + var(--calc-g-2));
-  max-height: calc(var(--calc-font-size) + var(--calc-g-2));
+  --pdfs: calc(var(--calc-font-size) * 1.25);
+  font-size: var(--pdfs);
+  line-height: calc(var(--pdfs) * 1.2);
+  min-height: calc(var(--pdfs) * 1.2);
+  max-height: calc(var(--pdfs) * 1.2);
 }
 .sub-display-container {
   display: grid;
-  grid-template-columns: 15% 81%;
-  grid-auto-rows: calc(
+  grid-template-columns: 15% 82.5%;
+  /* grid-auto-rows: calc(
     calc(var(--calc-font-size) * (4 / 9)) + (2 * var(--calc-g-2) + 5)
-  );
+  ); */
   gap: var(--calc-g-2);
 }
 div.sub-display-container .sub.display {
   font-size: calc(var(--calc-font-size) * (4 / 9));
-  opacity: 0.65;
+  opacity: 0.4;
+  --sdfs: calc(var(--calc-font-size) * 0.66);
+  --scaler: 1.15;
+  font-size: var(--sdfs);
+  line-height: calc(var(--sdfs) * var(--scaler));
+  min-height: calc(var(--sdfs) * var(--scaler));
+  max-height: calc(var(--sdfs) * var(--scaler));
 }
 /* .sub-display-container .memory.sub.display {} */
 .sub-display-container .calculation.sub.display {

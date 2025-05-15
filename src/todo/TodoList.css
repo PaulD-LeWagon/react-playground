@@ -1,9 +1,10 @@
 div.task-list-component {
+  font-family: var(--calc-font-fam);
   max-width: 75%;
   margin: 0 auto;
 }
 
-div.task-list-component h2.title {
+div.task-list-component .title {
   text-align: left;
   margin: 1.5rem 0 1rem 0;
   font-size: xx-large;
@@ -11,14 +12,21 @@ div.task-list-component h2.title {
 
 div.task-list-component .task-list-add-container {
   text-align: right;
-  border-bottom: solid 0.25rem black;
+  border-bottom: solid 0.25rem white;
+  margin-bottom: 1.5rem;
+
+  display: grid;
+  grid-template-columns: 6fr 1fr;
+  gap: 0.25rem;
 }
 div.task-list-component .task-list-add-container * {
-  margin: 0.25rem 0.25rem 0.5rem 0;
-  border: solid 0.25rem black;
+  margin: 0.25rem 0.25rem 1rem 0;
   border-radius: 0.25rem;
   font-size: larger;
   line-height: 1.5;
+}
+div.task-list-component .task-list-add-container input {
+  border: solid 0.25rem white;
 }
 div.task-list-component .task-list-add-container button:hover {
   cursor: pointer;
