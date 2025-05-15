@@ -542,17 +542,21 @@ export default function Calculator({ domID = "my-calculator" }) {
     },
   ]
 
-  console.log("To-do:")
-  console.log("1: [DONE] Push this repo to github! [DONE]")
-  console.log("2: [DONE] Display contents of appState.memory store. [DONE]")
-  console.log("3: [DONE] Display calculation sequence as-u-go. [DONE]")
-  console.log("4: [DONE] Implement the Undo/history feature. X2 [DONE] ")
-  console.log("5: [DONE] Bug: When deleting 0 from display. Removed keyboard Input")
-  console.log("5: [DONE] Cont: functionality The unicode characters are not on a standard keyboard.")
-  console.log("6: [DONE]Bug: Rounding errors ??? Add a config option. [DONE]")
-  console.log("7: [DONE]ADD: Config menu & minimise button. Dragable!? [DONE]")
+  // console.log("To-do:")
+  // console.log("1: [DONE] Push this repo to github! [DONE]")
+  // console.log("2: [DONE] Display contents of appState.memory store. [DONE]")
+  // console.log("3: [DONE] Display calculation sequence as-u-go. [DONE]")
+  // console.log("4: [DONE] Implement the Undo/history feature. X2 [DONE] ")
+  // console.log(
+  //   "5: [DONE] Bug: When deleting 0 from display. Removed keyboard Input"
+  // )
+  // console.log(
+  //   "5: [DONE] Cont: functionality The unicode characters are not on a standard keyboard."
+  // )
+  // console.log("6: [DONE] Bug: Rounding errors ??? Add a config option. [DONE]")
+  // console.log("7: [DONE] ADD: Config menu & minimise button. Dragable!? [DONE]")
+  // console.log("8: [DONE] START: a Basic To-do list component. [DONE] ")
 
-  console.log("8: Start a Basic To-do list component.")
   console.log("9: Create ur own custom collection objects and rubify them.")
   console.log("10: Make sure you can pass a Block|callback to them.")
 
@@ -712,7 +716,7 @@ export const Button = ({
   return (
     <button
       title={title}
-      className={className}
+      className={`button is-success ${className}`}
       type={btnType ? btnType : "button"}
       onClick={clickHandler}>
       {children}

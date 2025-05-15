@@ -318,10 +318,13 @@ function Editor() {
 
   return (
     <div className="basic-editor">
-      <h4>Basic Text Editor Version 1.0</h4>
+      <h3 className="title">Basic Text Editor</h3>
+      <h4 className="sub-title">Version 1.0</h4>
+
       <div className="basic-editor-controls">
         <div className={doEdit ? "show" : "hide"}>
           <button
+            className="button"
             title="H1 Title"
             onClick={(e) => {
               mutateSelectedText(e, "h1")
@@ -329,6 +332,7 @@ function Editor() {
             h1
           </button>
           <button
+            className="button"
             title="H2 Title"
             onClick={(e) => {
               mutateSelectedText(e, "h2")
@@ -336,6 +340,7 @@ function Editor() {
             h2
           </button>
           <button
+            className="button"
             title="H3 Title"
             onClick={(e) => {
               mutateSelectedText(e, "h3")
@@ -343,6 +348,7 @@ function Editor() {
             h3
           </button>
           <button
+            className="button"
             title="H4 Title"
             onClick={(e) => {
               mutateSelectedText(e, "h4")
@@ -350,6 +356,7 @@ function Editor() {
             h4
           </button>
           <button
+            className="button"
             title="H5 Title"
             onClick={(e) => {
               mutateSelectedText(e, "h5")
@@ -358,13 +365,15 @@ function Editor() {
           </button>
 
           <button
+            className="button"
             title="Title Case (Capitalise)"
             onClick={(e) => {
               mutateSelectedText(e, "capitalize")
             }}>
-            C
+            Aa
           </button>
           <button
+            className="button"
             title="To UPPERCASE"
             onClick={(e) => {
               mutateSelectedText(e, "uppercase")
@@ -372,6 +381,7 @@ function Editor() {
             A
           </button>
           <button
+            className="button"
             title="To lowercase"
             onClick={(e) => {
               mutateSelectedText(e, "lowercase")
@@ -380,6 +390,7 @@ function Editor() {
           </button>
 
           <button
+            className="button"
             title="Bold face"
             onClick={(e) => {
               mutateSelectedText(e, "bold")
@@ -389,6 +400,7 @@ function Editor() {
             </b>
           </button>
           <button
+            className="button"
             title="Italicise selection"
             onClick={(e) => {
               mutateSelectedText(e, "italic")
@@ -398,6 +410,7 @@ function Editor() {
             </b>
           </button>
           <button
+            className="button"
             title="Underline selection"
             onClick={(e) => {
               mutateSelectedText(e, "underline")
@@ -410,20 +423,34 @@ function Editor() {
           </button>
 
           <button
+            className="button"
             title="Undo last edit"
             onClick={handleUndo}
             disabled={isDisabled}>
-            Undo
+            <span class="icon is-small">
+              <i class="fa-solid fa-rotate-left"></i>
+            </span>
           </button>
         </div>
         <button
+          className={doEdit ? "button is-success" : "button is-warning"}
           title={doEdit ? "Save current edits?" : "Edit this text?"}
           onClick={() => {
             setDoEdit(!doEdit)
             // Add to history
             // Persist data with AJAX etc.
           }}>
-          {doEdit ? "Save" : "Edit"}
+          {doEdit ? (
+            <span class="icon is-small">
+              <i class="fa-solid fa-floppy-disk"></i>
+            </span>
+          ) : (
+            <span class="icon is-small">
+              <i
+                class="fa-solid fa-pen-to-square"
+                aria-hidden="true"></i>
+            </span>
+          )}
         </button>
       </div>
       <div

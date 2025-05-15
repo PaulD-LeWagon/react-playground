@@ -1,9 +1,17 @@
-import React, { useState, useRef } from "react"
+import React, { useState, useRef, useEffect } from "react"
 import "./Todo.css"
 
 function Todo({ id, title, done, dispatch }) {
   const titleRef = useRef(null)
   const [editing, setEditing] = useState(false)
+
+  useEffect(() => {
+    if (editing && titleRef.current) {
+      console.log(titleRef.current)
+      titleRef.current.focus()
+      // titleRef.current.setSelectionRange(-1, -1)
+    }
+  })
 
   const handleClick = (event, action) => {
     switch (action) {
@@ -44,7 +52,7 @@ function Todo({ id, title, done, dispatch }) {
         <input
           type="checkbox"
           name="todo-check"
-          className="todo-check"
+          className="todo-check checkbox"
           checked={done || false}
           onChange={(e) => {
             handleOnChange(e, "do_done")
@@ -60,19 +68,35 @@ function Todo({ id, title, done, dispatch }) {
 
         <div className="todo-controls">
           <button
-            className={editing ? "todo-save" : "todo-edit"}
+            className={
+              editing
+                ? "todo-save button is-primary"
+                : "todo-edit button is-warning"
+            }
             onClick={(e) => {
               handleClick(e, editing ? "do_save" : "do_edit")
             }}>
-            {editing ? "Save" : "Edit"}
+            {editing ? (
+              <span class="icon is-small">
+                <i class="fa-solid fa-floppy-disk"></i>
+              </span>
+            ) : (
+              <span class="icon is-small">
+                <i
+                  class="fa-solid fa-pen-to-square"
+                  aria-hidden="true"></i>
+              </span>
+            )}
           </button>
 
           <button
-            className="todo-delete"
+            className="todo-delete button is-danger"
             onClick={(e) => {
               handleClick(e, "do_delete")
             }}>
-            Delete
+            <span class="icon is-small">
+              <i class="fa-solid fa-trash-can"></i>
+            </span>
           </button>
         </div>
       </div>

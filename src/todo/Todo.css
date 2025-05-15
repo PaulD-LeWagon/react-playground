@@ -1,31 +1,26 @@
 div.todo {
   display: block;
-
   min-width: 13rem;
-  /* max-width: 20rem; */
-
   margin: 0.5rem auto;
-  border: solid 0.25rem black;
+  border: solid 0.25rem #fff;
   border-radius: 3rem;
-  padding: 0.5rem;
+  padding: 0.5rem 1.5rem 0.5rem 0.5rem;
 }
-div.todo * {
-  margin: 0;
-  padding: 0;
-  border: none;
-}
-
 div.todo > .todo-container {
   display: grid;
-  grid-template-columns: 1fr 4fr 3fr;
-  /* align-items: center; */
+  grid-template-columns: 1fr 6fr 1fr;
 }
 div.todo > .todo-container > .todo-title {
   text-align: left;
+  font-size: 1.75rem;
+  line-height: 1.5;
+  overflow: scroll !important;
+  scrollbar-width: none !important;
+  white-space: nowrap;
+  margin-right: 0.5rem;
 }
-div.todo > .todo-container .todo-controls {
+div.todo > .todo-container > .todo-controls {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.25rem;
-  /* align-items: center; */
 }
