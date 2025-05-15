@@ -1,5 +1,10 @@
+:root {
+  --editor-base-font-size: 1rem;
+}
+
 div.basic-editor {
   font-family: var(--calc-font-fam);
+  font-size: var(--editor-base-font-size);
   background-color: var(--calc-cfg-panel-bg);
   min-width: 500px;
   max-width: 75%;
@@ -14,6 +19,33 @@ div.basic-editor > h4 {
   margin: 0 !important;
   padding: 0 0.25rem;
   text-align: right;
+}
+
+div.basic-editor-pane h1,
+div.basic-editor-pane h2,
+div.basic-editor-pane h3,
+div.basic-editor-pane h4,
+div.basic-editor-pane h5,
+div.basic-editor-pane h6 {
+  font-weight: bolder !important;
+}
+div.basic-editor-pane h1 {
+  font-size: calc(var(--editor-base-font-size) * 1.6);
+}
+div.basic-editor-pane h2 {
+  font-size: calc(var(--editor-base-font-size) * 1.5);
+}
+div.basic-editor-pane h3 {
+  font-size: calc(var(--editor-base-font-size) * 1.4);
+}
+div.basic-editor-pane h4 {
+  font-size: calc(var(--editor-base-font-size) * 1.3);
+}
+div.basic-editor-pane h5 {
+  font-size: calc(var(--editor-base-font-size) * 1.2);
+}
+div.basic-editor-pane h6 {
+  font-size: calc(var(--editor-base-font-size) * 1.1);
 }
 
 div.basic-editor-controls,

@@ -95,7 +95,13 @@ function App() {
         </section>
       </main>
 
-      <footer>Devanney, Paul E. - Rogue Digitál &copy; 2025</footer>
+      <footer>
+        Devanney, Paul E. -{" "}
+        <strong>
+          <em>la Digitál Rógue</em>
+        </strong>{" "}
+        &copy; 2025
+      </footer>
     </div>
   )
 }
