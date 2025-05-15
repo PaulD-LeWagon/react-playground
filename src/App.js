@@ -21,7 +21,7 @@ function App() {
         <h2>
           <img
             src={logo}
-            className="header-logo"
+            className="App-logo header-logo"
             alt="logo"
           />{" "}
           <span className="header-text">My React Playground</span>
@@ -94,6 +94,8 @@ function App() {
           <Calculator />
         </section>
       </main>
+
+      <footer>Devanney, Paul E. - Rogue Digitál &copy; 2025</footer>
     </div>
   )
 }

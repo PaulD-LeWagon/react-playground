@@ -168,9 +168,6 @@ div.calculator div.app-container > div.keypad * {
 .sub-display-container {
   display: grid;
   grid-template-columns: 15% 82.5%;
-  /* grid-auto-rows: calc(
-    calc(var(--calc-font-size) * (4 / 9)) + (2 * var(--calc-g-2) + 5)
-  ); */
   gap: var(--calc-g-2);
 }
 div.sub-display-container .sub.display {
