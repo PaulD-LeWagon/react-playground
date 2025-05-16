@@ -5,7 +5,17 @@ div.todo {
   border: solid 0.25rem #fff;
   border-radius: 3rem;
   padding: 0.5rem 1.5rem 0.5rem 0.5rem;
+  text-align: left;
 }
+div.todo .show {
+  display: block;
+  opacity: 1;
+}
+div.todo .hide {
+  display: none;
+  opacity: 0;
+}
+
 div.todo > .todo-container {
   display: grid;
   grid-template-columns: 1fr 6fr 1fr;
@@ -21,6 +31,37 @@ div.todo > .todo-container > .todo-title {
 }
 div.todo > .todo-container > .todo-controls {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 0.25rem;
+}
+
+/* New keyframes to support our animations above. */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes open-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: 100%;
+  }
+}
+
+@keyframes close-up {
+  from {
+    height: 100%;
+  }
+  to {
+    height: 0;
+  }
 }

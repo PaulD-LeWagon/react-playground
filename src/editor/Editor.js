@@ -427,8 +427,8 @@ function Editor() {
             title="Undo last edit"
             onClick={handleUndo}
             disabled={isDisabled}>
-            <span class="icon is-small">
-              <i class="fa-solid fa-rotate-left"></i>
+            <span className="icon is-small">
+              <i className="fa-solid fa-rotate-left"></i>
             </span>
           </button>
         </div>
@@ -441,13 +441,13 @@ function Editor() {
             // Persist data with AJAX etc.
           }}>
           {doEdit ? (
-            <span class="icon is-small">
-              <i class="fa-solid fa-floppy-disk"></i>
+            <span className="icon is-small">
+              <i className="fa-solid fa-floppy-disk"></i>
             </span>
           ) : (
-            <span class="icon is-small">
+            <span className="icon is-small">
               <i
-                class="fa-solid fa-pen-to-square"
+                className="fa-solid fa-pen-to-square"
                 aria-hidden="true"></i>
             </span>
           )}

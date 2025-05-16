@@ -17,7 +17,7 @@ function tasksReducer(tasks, action) {
     case "do_save": {
       return tasks.map((task, i) => {
         if (task.id === action.id) {
-          Object.assign(newTask, task, { title: action.title })
+          Object.assign(newTask, task, { title: action.title, description: action.description })
           return newTask
         } else {
           return task

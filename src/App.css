@@ -1,6 +1,22 @@
 @import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css";
 @import "https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css";
 
+/* ::view-transition-old(*) {
+  animation: 300ms ease-out fade-out;
+}
+::view-transition-new(*) {
+  animation: 300ms ease-in fade-in;
+} */
+
+::view-transition-old(.slow-fade) {
+  animation-delay: 0ms;
+  animation-duration: 333ms;
+}
+::view-transition-new(.slow-fade) {
+  animation-delay: 100ms;
+  animation-duration: 333ms;
+}
+
 main {
   padding: 2rem 0;
 }
@@ -51,6 +67,8 @@ header.App-header h2 .header-text {
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+
+  padding: 1.5rem;
 }
 
 .App-link {
