@@ -1,5 +1,9 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState } from "react"
+import React, {
+  useState,
+  unstable_ViewTransition as ViewTransition,
+  startTransition,
+} from "react"
 import logo from "./logo.svg"
 import "./App.css"
 import Editor from "./editor/Editor"
@@ -12,7 +16,9 @@ function App() {
 
   const handleTabClick = (event, tab) => {
     event.preventDefault()
-    setActiveTab(tab)
+    startTransition(() => {
+      setActiveTab(tab)
+    })
   }
 
   return (
@@ -73,26 +79,38 @@ function App() {
           </ul>
         </div>
 
-        <section
-          id="todo_list"
-          className={activeTab === "todo_list" ? "" : "hide"}>
-          <TodoList
-            name="Latin"
-            currentTasks={tasks}
-          />
-        </section>
+        <ViewTransition
+          key="todo_list"
+          default="slow-fade">
+          <section
+            id="todo_list"
+            className={activeTab === "todo_list" ? "show" : "hide"}>
+            <TodoList
+              name="Latin"
+              currentTasks={tasks}
+            />
+          </section>
+        </ViewTransition>
 
-        <section
-          id="text_editor"
-          className={activeTab === "text_editor" ? "" : "hide"}>
-          <Editor />
-        </section>
+        <ViewTransition
+          key="text_editor"
+          default="slow-fade">
+          <section
+            id="text_editor"
+            className={activeTab === "text_editor" ? "show" : "hide"}>
+            <Editor />
+          </section>
+        </ViewTransition>
 
-        <section
-          id="abacus"
-          className={activeTab === "abacus" ? "" : "hide"}>
-          <Calculator />
-        </section>
+        <ViewTransition
+          key="abacus"
+          default="slow-fade">
+          <section
+            id="abacus"
+            className={activeTab === "abacus" ? "show" : "hide"}>
+            <Calculator />
+          </section>
+        </ViewTransition>
       </main>
 
       <footer>

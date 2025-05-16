@@ -556,9 +556,8 @@ export default function Calculator({ domID = "my-calculator" }) {
   // console.log("6: [DONE] Bug: Rounding errors ??? Add a config option. [DONE]")
   // console.log("7: [DONE] ADD: Config menu & minimise button. Dragable!? [DONE]")
   // console.log("8: [DONE] START: a Basic To-do list component. [DONE] ")
-
-  console.log("9: Create ur own custom collection objects and rubify them.")
-  console.log("10: Make sure you can pass a Block|callback to them.")
+  // console.log("9: Create ur own custom collection objects and rubify them.")
+  // console.log("10: Make sure you can pass a Block|callback to them.")
 
   return (
     <div

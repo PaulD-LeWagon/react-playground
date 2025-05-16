@@ -1,4 +1,9 @@
-import React, { useReducer, useRef } from "react"
+import React, {
+  useReducer,
+  useRef,
+  unstable_ViewTransition as ViewTransition,
+  startTransition,
+} from "react"
 import "./TodoList.css"
 import "../app-utilities"
 import Todo from "./Todo"
@@ -12,16 +17,20 @@ function TodoList({ name, currentTasks }) {
   nextId = nextId >= currentTasks.length ? nextId : currentTasks.length
 
   const handleAddTodoClick = (e) => {
-    dispatch({
-      type: "add_new",
-      todo: {
-        id: nextId++,
-        title: addTodoInputRef.current.value,
-        done: false,
-      },
+    startTransition(() => {
+      dispatch({
+        type: "add_new",
+        todo: {
+          id: nextId++,
+          title: addTodoInputRef.current.value,
+          done: false,
+        },
+      })
+      addTodoInputRef.current.value = ""
     })
-    addTodoInputRef.current.value = ""
   }
+
+  // console.count(`Todo List`)
 
   return (
     <div className="task-list-component">
@@ -32,19 +41,30 @@ function TodoList({ name, currentTasks }) {
           ref={addTodoInputRef}
           type="text"
           placeholder="Add a todo?"
+          onKeyDown={(e) => {
+            if (e.key === "Enter") handleAddTodoClick(e)
+          }}
         />
-        <button className="button is-primary" onClick={handleAddTodoClick}>Add</button>
+        <button
+          className="button is-primary"
+          onClick={handleAddTodoClick}>
+          Add
+        </button>
       </div>
 
       <ul className="task-list-ul">
         {tasks.map((task, i) => {
           return (
-            <li key={task.id}>
-              <Todo
-                {...task}
-                dispatch={dispatch}
-              />
-            </li>
+            <ViewTransition
+              key={task.id}
+              default="slow-fade">
+              <li key={task.id}>
+                <Todo
+                  {...task}
+                  dispatch={dispatch}
+                />
+              </li>
+            </ViewTransition>
           )
         })}
       </ul>
