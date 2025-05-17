@@ -1,9 +1,4 @@
-import React, {
-  useReducer,
-  useRef,
-  unstable_ViewTransition as ViewTransition,
-  startTransition,
-} from "react"
+import React, { useReducer, useRef, startTransition } from "react"
 import "./TodoList.css"
 import "../app-utilities"
 import Todo from "./Todo"
@@ -55,16 +50,12 @@ function TodoList({ name, currentTasks }) {
       <ul className="task-list-ul">
         {tasks.map((task, i) => {
           return (
-            <ViewTransition
-              key={task.id}
-              default="slow-fade">
-              <li key={task.id}>
-                <Todo
-                  {...task}
-                  dispatch={dispatch}
-                />
-              </li>
-            </ViewTransition>
+            <li key={task.id}>
+              <Todo
+                {...task}
+                dispatch={dispatch}
+              />
+            </li>
           )
         })}
       </ul>

@@ -80,8 +80,8 @@ function App() {
         </div>
 
         <ViewTransition
-          key="todo_list"
-          default="slow-fade">
+          name="todo_list"
+          default="slow-fade none">
           <section
             id="todo_list"
             className={activeTab === "todo_list" ? "show" : "hide"}>
@@ -93,7 +93,7 @@ function App() {
         </ViewTransition>
 
         <ViewTransition
-          key="text_editor"
+          name="text_editor"
           default="slow-fade">
           <section
             id="text_editor"
@@ -103,7 +103,7 @@ function App() {
         </ViewTransition>
 
         <ViewTransition
-          key="abacus"
+          name="abacus"
           default="slow-fade">
           <section
             id="abacus"

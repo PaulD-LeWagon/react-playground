@@ -8,11 +8,11 @@ div.todo {
   text-align: left;
 }
 div.todo .show {
-  display: block;
+  visibility: visible;
   opacity: 1;
 }
 div.todo .hide {
-  display: none;
+  visibility: collapse;
   opacity: 0;
 }
 
@@ -35,33 +35,119 @@ div.todo > .todo-container > .todo-controls {
   gap: 0.25rem;
 }
 
+div.todo > .todo-container > p.todo-description {
+  margin-top: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+/* ::view-transition-old(*) {
+  animation: 300ms ease-out fade-out;
+}
+::view-transition-new(*) {
+  animation: 300ms ease-in fade-in;
+} */
+
+::view-transition-old(.meh) {
+  animation: 200ms ease-out fade-out;
+}
+::view-transition-new(.meh) {
+  animation: 200ms ease-in fade-in;
+  animation-delay: 200ms;
+}
+
 /* New keyframes to support our animations above. */
 @keyframes fade-in {
   from {
     opacity: 0;
   }
+  to {
+    opacity: 1;
+  }
 }
-
 @keyframes fade-out {
+  from {
+    opacity: 1;
+  }
   to {
     opacity: 0;
   }
 }
 
-@keyframes open-down {
+::view-transition-old(.slide-in) {
+  animation-name: slideOutRight;
+  animation-duration: 500ms;
+  animation-timing-function: ease-in-out;
+}
+
+::view-transition-new(.slide-in) {
+  animation-name: slideInRight;
+  animation-duration: 500ms;
+  animation-timing-function: ease-in-out;
+}
+
+::view-transition-old(.slide-out) {
+  animation-name: slideOutLeft;
+  animation-duration: 500ms;
+  animation-timing-function: ease-in-out;
+}
+
+::view-transition-new(.slide-out) {
+  animation-name: slideInLeft;
+  animation-duration: 500ms;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes slideOutLeft {
   from {
-    height: 0;
+    transform: translateX(0);
+    opacity: 1;
   }
   to {
-    height: 100%;
+    transform: translateX(-100%);
+    opacity: 0;
   }
 }
 
-@keyframes close-up {
+@keyframes slideInLeft {
   from {
-    height: 100%;
+    transform: translateX(-100%);
+    opacity: 0;
   }
   to {
-    height: 0;
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
   }
 }
