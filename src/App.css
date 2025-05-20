@@ -1,78 +1,204 @@
 @import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css";
 @import "https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css";
 
+.box-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+  height: 80px;
+  border: 0.25rem solid yellowgreen;
+  border-radius: 0.25rem;
+  margin: 1rem 0;
+  padding: 0.5rem;
+}
+.box-container .box {
+  width: 50px;
+  height: 50px;
+  border-radius: 5px;
+  border: 0.25rem solid yellowgreen;
+  margin: 0;
+}
+.box-container .red.box {
+  background-color: red;
+}
+.box-container .green.box {
+  background-color: green;
+}
+.box-container .blue.box {
+  background-color: blue;
+}
+
+.box-container.rvt {
+  /* Transition names needed here if using the browser's native ViewTransitions */
+  view-transition-name: box-container-rvt;
+}
+.box-container.rvt .red.box.rvt {
+  /* Transition names needed here if using the browser's native ViewTransitions */
+  view-transition-name: red-box-rvt;
+}
+.box-container.rvt .green.box.rvt {
+  /* Transition names needed here if using the browser's native ViewTransitions */
+  view-transition-name: green-box-rvt;
+}
+.box-container.rvt .blue.box.rvt {
+  /* Transition names needed here if using the browser's native ViewTransitions */
+  view-transition-name: blue-box-rvt;
+}
+
+.box-container.nvt {
+  /* Transition names needed here if using the browser's native ViewTransitions */
+  view-transition-name: box-container-nvt;
+  height: 300px;
+}
+.box-container.nvt .red.box.nvt {
+  /* Transition names needed here if using the browser's native ViewTransitions */
+  view-transition-name: red-box-nvt;
+}
+.box-container.nvt .green.box.nvt {
+  /* Transition names needed here if using the browser's native ViewTransitions */
+  view-transition-name: green-box-nvt;
+}
+.box-container.nvt .blue.box.nvt {
+  /* Transition names needed here if using the browser's native ViewTransitions */
+  view-transition-name: blue-box-nvt;
+}
+
+::view-transition-group(.slow-fade) {
+  animation-duration: 0.8s;
+}
 ::view-transition-old(.slow-fade) {
-  animation-delay: 0ms;
-  animation-duration: 600ms;
+  animation-name: fade-out;
+  animation-timing-function: ease-out;
 }
 ::view-transition-new(.slow-fade) {
-  animation-delay: 100ms;
-  animation-duration: 700ms;
+  animation-name: fade-in;
+  animation-timing-function: ease-in;
 }
 
-main {
-  padding: 2rem 0;
+::view-transition-old(.fade) {
+  animation: fade-out 0.5s ease-out;
+}
+::view-transition-new(.fade) {
+  animation: fade-in 0.5s ease-in;
 }
 
-.App {
-  text-align: center;
+::view-transition-old(.spinner) {
+  animation: spin 0.5s forwards;
+}
+::view-transition-new(.spinner) {
+  animation: spin 0.5s forwards;
 }
 
-.App .hide {
-  display: none;
+::view-transition-old(.fade-spinner) {
+  animation-name: fade-out, spin;
+  animation-duration: 0.5s;
+  animation-timing-function: ease-out;
+}
+::view-transition-new(.fade-spinner) {
+  animation-name: fade-in, spin;
+  animation-duration: 0.5s;
+  animation-timing-function: ease-in;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+::view-transition-group(box-container) {
+  perspective: 500px;
+}
+::view-transition-old(box-container),
+::view-transition-new(box-container) {
+  contain: inline-size layout style;
+}
+::view-transition-old(box-container) {
+  animation-name: fade-out, spin;
+  animation-duration: 0.5s;
+  animation-timing-function: ease-out;
+}
+::view-transition-new(box-container) {
+  animation-name: fade-in, spin;
+  animation-duration: 0.5s;
+  animation-timing-function: ease-in;
 }
 
-header.App-header h2 {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  pointer-events: none;
-}
-header.App-header h2 .header-logo {
-  height: 10vmin;
-}
-header.App-header h2 .header-text {
-  height: auto;
-}
-
-.App .container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+@keyframes slide-out {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(var(--slide-direction) * 100%));
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-
-  padding: 1.5rem;
+@keyframes slide-in {
+  from {
+    transform: translateX(calc(var(--slide-direction) * -100%));
+  }
+  to {
+    transform: translateX(0);
+  }
 }
 
-.App-link {
-  color: #61dafb;
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
 }
 
-@keyframes App-logo-spin {
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+}
+
+@keyframes spin {
   from {
     transform: rotate(0deg);
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+main {
+  padding: 2rem 0;
+}
+main .animations.content {
+  width: 70%;
+  margin: 1rem auto;
+}
+footer {
+  text-align: center;
+}
+
+.App {
+  display: block;
+}
+.App .hide {
+  display: none;
+}
+.App-link {
+  color: #61dafb;
+}
+
+.card.one {
+  max-width: 33.3%;
+  background-color: lightslategray;
+  margin: 0.25rem;
+}
+.card.one footer {
+  padding: 0.5rem 1rem;
+}
+
+@keyframes header-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .header-logo {
+    animation: header-logo-spin infinite 20s linear;
   }
 }

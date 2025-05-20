@@ -1,127 +1,147 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
+import ErrorBoundary from "./ErrorBoundary.class"
+
 import React, {
+  // useRef,
   useState,
-  unstable_ViewTransition as ViewTransition,
-  startTransition,
+  // unstable_ViewTransition as ViewTransition,
+  // unstable_addTransitionType as addTransitionType,
+  // startTransition,
 } from "react"
+
 import logo from "./logo.svg"
 import "./App.css"
-import Editor from "./editor/Editor"
-import Calculator from "./calculator/Calculator"
-import TodoList from "./todo/TodoList"
-import { default as tasks } from "./todo/tasks"
+
+import Tabs from "./page-components/Tabs"
+// import Header from "./page-components/header"
+import Page, {
+  Header,
+  Main,
+  Section,
+  Footer,
+  Message,
+  Modal,
+  ImgCard,
+  Card,
+  Button,
+} from "./page-components/components"
+
+import { compact } from "./app-utilities"
+
+const compactedArray = compact([1, null, 3, NaN, 5, undefined, 7, false])
+console.log(compactedArray)
 
 function App() {
-  const [activeTab, setActiveTab] = useState("todo_list")
-
-  const handleTabClick = (event, tab) => {
-    event.preventDefault()
-    startTransition(() => {
-      setActiveTab(tab)
-    })
+  const [isActive, setIsActive] = useState(false)
+  const onCloseClk = (event) => {
+    setIsActive(!isActive)
+  }
+  const [isActive2, setIsActive2] = useState(false)
+  const onCloseClk2 = (event) => {
+    setIsActive2(!isActive2)
   }
 
   return (
     <div className="App">
-      <header className="App-header">
-        <h2>
-          <img
-            src={logo}
-            className="App-logo header-logo"
-            alt="logo"
-          />{" "}
-          <span className="header-text">My React Playground</span>
-        </h2>
-      </header>
+      <ErrorBoundary
+        fallback={
+          <Message
+            className="is-danger"
+            title="Page Error:"
+            description="Check console for more details"
+            style={{ width: "400px", margin: "1rem auto" }}
+          />
+        }>
+        <Page id="page_1">
+          <Header
+            level="1"
+            title="My React Playground"
+            subtitle="Exploring the React Eco-System"
+            logoUrl={logo}
+          />
 
-      <main>
-        <div className="tabs is-large is-right is-boxed">
-          <ul>
-            <li className={activeTab === "todo_list" ? "is-active" : ""}>
-              <a
-                onClick={(e) => {
-                  handleTabClick(e, "todo_list")
+          <Modal
+            title="Test Modal"
+            description="This is a test string for a test component. Testing 1, 2, 3"
+            id="modal_1"
+            classList="m-one m-two m-three"
+            isActive={isActive}
+            onCloseClk={onCloseClk}
+          />
+
+          <Modal
+            title="Test Image Modal"
+            description="This is a test string for a test component. Testing 1, 2, 3"
+            id="modal_2"
+            classList="m-one m-two m-three"
+            isActive={isActive2}
+            onCloseClk={onCloseClk2}
+            atts={{
+              src: "https://placehold.co/350x200/000000/FFF",
+              alt: "Some image of something, somewhere!",
+            }}
+            type="image"
+          />
+
+          <Card
+            id="card-1"
+            classList="one"
+            title="Lorem Ipsum"
+            content="Vulpes velox fulva super canem pigrum saltavit!"
+            footer={
+              <Button
+                classList="card-footer-item"
+                atts={{
+                  onClick: () => {
+                    alert("Button Clicked!")
+                  },
                 }}>
-                <span className="icon is-small">
-                  <i
-                    className="fa-solid fa-list"
-                    aria-hidden="true"></i>
-                </span>
-                <span>Todo List</span>
-              </a>
-            </li>
-            <li className={activeTab === "text_editor" ? "is-active" : ""}>
-              <a
-                onClick={(e) => {
-                  handleTabClick(e, "text_editor")
-                }}>
-                <span className="icon is-small">
-                  <i
-                    className="fa-solid fa-pen-to-square"
-                    aria-hidden="true"></i>
-                </span>
-                <span>Text Editor</span>
-              </a>
-            </li>
-            <li className={activeTab === "abacus" ? "is-active" : ""}>
-              <a
-                onClick={(e) => {
-                  handleTabClick(e, "abacus")
-                }}>
-                <span className="icon is-small">
-                  <i
-                    className="fa-solid fa-calculator"
-                    aria-hidden="true"></i>
-                </span>
-                <span>Calculator</span>
-              </a>
-            </li>
-          </ul>
-        </div>
+                Click Me
+              </Button>
+            }
+          />
 
-        <ViewTransition
-          name="todo_list"
-          default="slow-fade none">
-          <section
-            id="todo_list"
-            className={activeTab === "todo_list" ? "show" : "hide"}>
-            <TodoList
-              name="Latin"
-              currentTasks={tasks}
-            />
-          </section>
-        </ViewTransition>
+          <ImgCard
+            title="This is a placeholder image"
+            content="The quick brown fox jumped over the lazy dog!"
+            imgSrc="https://placehold.co/350x200/000000/FFF"
+            imgAlt="Just a placholder image for now!"
+            imgWidth="350px"
+            imgHeight="200px"
+          />
 
-        <ViewTransition
-          name="text_editor"
-          default="slow-fade">
-          <section
-            id="text_editor"
-            className={activeTab === "text_editor" ? "show" : "hide"}>
-            <Editor />
-          </section>
-        </ViewTransition>
+          <Main
+            id="main-content"
+            classList="slide-in"
+            content={
+              <Section
+                id="app-tabs"
+                content={
+                  <Tabs
+                    isActive={isActive}
+                    onCloseClk={onCloseClk}
+                    isActive2={isActive2}
+                    onCloseClk2={onCloseClk2}
+                  />
+                }
+              />
+            }
+          />
 
-        <ViewTransition
-          name="abacus"
-          default="slow-fade">
-          <section
-            id="abacus"
-            className={activeTab === "abacus" ? "show" : "hide"}>
-            <Calculator />
-          </section>
-        </ViewTransition>
-      </main>
-
-      <footer>
-        Devanney, Paul E. -{" "}
-        <strong>
-          <em>la Digitál Rógue</em>
-        </strong>{" "}
-        &copy; 2025
-      </footer>
+          <Footer
+            id="page_footer"
+            content={
+              <>
+                Devanney, Paul E. -{" "}
+                <strong>
+                  <em>la Digitál Rógue</em>
+                </strong>{" "}
+                &copy; 2025
+              </>
+            }
+          />
+        </Page>
+      </ErrorBoundary>
     </div>
   )
 }
-
 export default App

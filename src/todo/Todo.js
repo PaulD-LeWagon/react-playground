@@ -59,11 +59,7 @@ function Todo({ id, title, description, done, dispatch }) {
   // console.count(`Todo (${id})`)
 
   return (
-    <ViewTransition
-      name={`todo-task-${id}`}
-      enter="slide-in" // Does not work or I don't understand it
-      exit="slide-out" // Does not work or I don't understand it
-    >
+    <ViewTransition name={`todo-task-${id}`}>
       <div className="todo">
         <div className="todo-container">
           <input

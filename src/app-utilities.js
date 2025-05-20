@@ -1,3 +1,26 @@
+export function compact(arrOrObj) {
+  if (Array.isArray(arrOrObj)) {
+    return arrOrObj.filter(Boolean)
+  } else if (typeof arrOrObj === "object") {
+    return Object.fromEntries(
+      Object.entries(arrOrObj).filter(([key, value]) => Boolean(value))
+    )
+  } else {
+    console.error(
+      `
+      [compact]: This is neither an
+      Array nor an Object: [${typeof arrOrObj}]
+      `.trim()
+    )
+  }
+}
+
+export function randInt(min, max) {
+  min = Math.ceil(min)
+  max = Math.floor(max)
+  return Math.floor(Math.random() * (max - min + 1) + min)
+}
+
 export const arrayChunk = (theArray, inToXes = 0) => {
   if (!theArray || inToXes < 1) return []
   const retArray = []
